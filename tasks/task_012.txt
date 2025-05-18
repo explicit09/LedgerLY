@@ -1,6 +1,6 @@
 # Task ID: 12
 # Title: Data Export Functionality
-# Status: pending
+# Status: done
 # Dependencies: 1, 2, 5, 8, 16, 17, 18, 19
 # Priority: low
 # Description: Implement functionality for users to export their transaction data in CSV format.

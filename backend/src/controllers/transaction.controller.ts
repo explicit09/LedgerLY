@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 import { transactionService } from '../services/transaction';
 import { prisma } from '../lib/prisma';
 import { BadRequestError, NotFoundError, UnauthorizedError } from '../errors/AppError';
@@ -49,11 +50,13 @@ export class TransactionController {
   }
 
   static async update(req: Request, res: Response, next: NextFunction) {
+
     try {
       const userId = req.user?.id;
       if (!userId) {
         throw new UnauthorizedError('User not authenticated');
       }
+
 
       const { id } = req.params;
       const { category, description, isRecurring } = req.body;
@@ -72,6 +75,7 @@ export class TransactionController {
       sendSuccessResponse(res, updated);
     } catch (error) {
       next(error);
+
     }
   }
 }

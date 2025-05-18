@@ -94,23 +94,23 @@ function BankConnectionButton() {
 ### Dependencies: None
 ### Description: Set up the necessary environment variables for Plaid integration using the template in scripts/env.template
 ### Details:
-
-
+Add `PLAID_CLIENT_ID`, `PLAID_SECRET`, `PLAID_ENV`, and optional `PLAID_WEBHOOK_URL` to `.env.staging` and `.env.production`.
+Follow the template in `scripts/env.template` and document the setup in the README.
+Verify the variables load correctly during local and staging builds.
 ## 9.2. Implement logging for Plaid connection events [done]
 ### Dependencies: None
 ### Description: Add timestamped logging for Plaid connection attempts, successes, and failures to align with the CI/CD pipeline testing requirements
 ### Details:
-
-
+Record Link open, success, exit, and error events using the application's logging utility.
+Include timestamps and user identifiers in each log entry and forward logs to the monitoring service.
 ## 9.3. Add CI/CD pipeline test cases [done]
 ### Dependencies: None
 ### Description: Create specific test cases for the Plaid integration to be included in the test-pipeline.sh script
 ### Details:
-
-
+Use Plaid sandbox credentials to simulate connection, token exchange, and failure scenarios.
+Ensure these tests run in CI by extending `test-pipeline.sh` with new functions.
 ## 9.4. Document Plaid integration in pipeline documentation [done]
 ### Dependencies: None
 ### Description: Update docs/pipeline-testing.md with specific information about testing the Plaid integration
 ### Details:
-
-
+Add a new section describing Plaid integration tests, required environment variables, and log locations.

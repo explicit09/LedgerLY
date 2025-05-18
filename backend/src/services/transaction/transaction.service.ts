@@ -24,6 +24,7 @@ type ProcessTransactionsOptions = {
 type Transaction = {
   id: string;
   description: string;
+  merchantName?: string | null;
   amount: number;
   date: Date;
 };
@@ -171,21 +172,23 @@ class TransactionService {
           select: {
             id: true,
             description: true,
+            merchantName: true,
             amount: true,
             date: true,
           },
         });
         const recurring: RecurringTransaction[] = [];
 
-        // Group transactions by description and amount
+        // Group transactions by merchant and similar amounts (within ~5% variance)
         const groups = allTxs.reduce((acc: Record<string, Transaction[]>, tx: Transaction) => {
-          const key = `${tx.description}-${tx.amount}`;
+          const merchant = (tx.merchantName || tx.description).toLowerCase();
+          const key = `${merchant}-${Math.round(tx.amount)}`;
           if (!acc[key]) {
             acc[key] = [];
           }
           acc[key].push(tx);
           return acc;
-        }, {});
+        }, {} as Record<string, Transaction[]>);
 
         // Analyze each group for recurring patterns
         (Object.values(groups) as Transaction[][]).forEach((group: Transaction[]) => {
@@ -208,12 +211,13 @@ class TransactionService {
           const avgDays =
             intervals.reduce((sum: number, days: number) => sum + days, 0) / intervals.length;
 
-          // Only consider as recurring if we have at least 2 transactions
-          // and the average interval is less than 35 days (monthly)
-          if (group.length >= 2 && avgDays <= 35) {
+          const isConsistent = intervals.every(i => Math.abs(i - avgDays) <= 3);
+
+          // Only consider as recurring if we have consistent intervals and the average is monthly or more frequent
+          if (group.length >= 2 && isConsistent && avgDays <= 35) {
             recurring.push({
               userId,
-              description: group[0].description,
+              description: group[0].merchantName || group[0].description,
               amount: group[0].amount,
               frequency: this.determineFrequency(avgDays),
               transactionIds: group.map((tx: Transaction) => tx.id),
@@ -273,9 +277,10 @@ class TransactionService {
     // Analyze each group for recurring patterns
     const recurring: RecurringTransaction[] = [];
 
-    // Group transactions by description and amount
+    // Group transactions by merchant and rounded amount for 5% variance
     const groups = transactions.reduce((acc: Record<string, Transaction[]>, tx: Transaction) => {
-      const key = `${tx.description}-${tx.amount}`;
+      const merchant = (tx.merchantName || tx.description).toLowerCase();
+      const key = `${merchant}-${Math.round(tx.amount)}`;
       if (!acc[key]) {
         acc[key] = [];
       }
@@ -303,12 +308,13 @@ class TransactionService {
       const avgDays =
         intervals.reduce((sum: number, days: number) => sum + days, 0) / intervals.length;
 
-      // Only consider as recurring if we have at least 2 transactions
-      // and the average interval is less than 35 days (monthly)
-      if (group.length >= 2 && avgDays <= 35) {
+      const isConsistent = intervals.every(i => Math.abs(i - avgDays) <= 3);
+
+      // Only consider as recurring if intervals are consistent and at least monthly
+      if (group.length >= 2 && isConsistent && avgDays <= 35) {
         recurring.push({
           userId,
-          description: group[0].description,
+          description: group[0].merchantName || group[0].description,
           amount: group[0].amount,
           frequency: this.determineFrequency(avgDays),
           transactionIds: group.map((tx: Transaction) => tx.id),
@@ -323,8 +329,8 @@ class TransactionService {
    * Determine the frequency based on average days between transactions
    */
   private determineFrequency(avgDays: number): 'weekly' | 'biweekly' | 'monthly' {
-    if (avgDays <= 7) return 'weekly';
-    if (avgDays <= 14) return 'biweekly';
+    if (avgDays <= 7.5) return 'weekly';
+    if (avgDays <= 15) return 'biweekly';
     return 'monthly';
   }
 
