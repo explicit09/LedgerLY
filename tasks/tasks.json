@@ -344,7 +344,7 @@
       "id": 5,
       "title": "Transaction Data Processing and Storage",
       "description": "Process and store transaction data from Plaid, including categorization and recurring transaction detection.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -363,25 +363,25 @@
           "id": 5.1,
           "title": "Integrate transaction processing with CI/CD pipeline",
           "description": "Update transaction processing service to work with the newly created CI/CD pipeline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5.2,
           "title": "Create database migration scripts for transaction tables",
           "description": "Develop migration scripts for transaction tables that can be run automatically in the CI/CD pipeline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5.3,
           "title": "Configure environment-specific settings for transaction processing",
           "description": "Set up configuration for transaction processing service across dev, staging, and production environments",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5.4,
           "title": "Add transaction service tests to GitHub Actions workflow",
           "description": "Ensure transaction processing tests are included in the backend testing workflow",
-          "status": "pending"
+          "status": "done"
         }
       ]
     },
@@ -598,7 +598,7 @@
       "id": 10,
       "title": "Dashboard Analytics Visualization",
       "description": "Implement frontend visualizations for financial analytics using charts and graphs.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -681,7 +681,7 @@
       "id": 14,
       "title": "Security Enhancements and Data Encryption",
       "description": "Implement additional security measures including data encryption, HTTPS enforcement, and security headers.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
