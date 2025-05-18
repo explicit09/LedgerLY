@@ -28,7 +28,8 @@
       "@/hooks/*": ["src/hooks/*"],
       "@/lib/*": ["src/lib/*"],
       "@/utils/*": ["src/utils/*"],
-      "@/types/*": ["src/types/*"]
+      "@/types/*": ["src/types/*"],
+      "@/features/*": ["src/features/*"]
     },
     "typeRoots": [
       "./node_modules/@types",

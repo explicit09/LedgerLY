@@ -627,7 +627,7 @@
       "id": 11,
       "title": "Transaction Management UI",
       "description": "Build the frontend interface for viewing, searching, and editing transactions.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
