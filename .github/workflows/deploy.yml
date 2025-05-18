@@ -30,7 +30,7 @@ jobs:
             --message "Starting deployment to staging environment"
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -184,7 +184,7 @@ jobs:
             --message "Starting deployment to production environment"
 
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Similar steps as staging, but with production environment variables and secrets
       # This ensures production deployments only happen after successful staging deployments 
