@@ -1,37 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import {
+  CashFlowChart,
+  ExpenseBreakdownChart,
+  DateRangeSelector,
+  NetCashTrendChart,
+  RecurringTransactionsList,
+} from '../components/charts';
+import { subMonths, formatISO } from 'date-fns';
 
 const Dashboard: React.FC = () => {
+  const [range, setRange] = useState(() => {
+    const end = new Date();
+    const start = subMonths(end, 1);
+    return {
+      startDate: formatISO(start, { representation: 'date' }),
+      endDate: formatISO(end, { representation: 'date' }),
+    };
+  });
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-primary">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <DateRangeSelector
+        startDate={range.startDate}
+        endDate={range.endDate}
+        onChange={setRange}
+      />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card">
-          <h3 className="text-lg font-semibold text-primary mb-2">Net Worth Trend</h3>
-          <div className="h-48 bg-gray-100 rounded flex items-center justify-center">
-            Chart Placeholder
-          </div>
+          <NetCashTrendChart startDate={range.startDate} endDate={range.endDate} />
         </div>
         <div className="card">
-          <h3 className="text-lg font-semibold text-primary mb-2">Monthly Spending</h3>
-          <div className="h-48 bg-gray-100 rounded flex items-center justify-center">
-            Chart Placeholder
-          </div>
+          <CashFlowChart startDate={range.startDate} endDate={range.endDate} />
         </div>
         <div className="card">
-          <h3 className="text-lg font-semibold text-primary mb-2">Recent Transactions</h3>
-          <div className="space-y-2">
-            <div className="p-2 bg-gray-50 rounded">Transaction 1</div>
-            <div className="p-2 bg-gray-50 rounded">Transaction 2</div>
-            <div className="p-2 bg-gray-50 rounded">Transaction 3</div>
-          </div>
+          <ExpenseBreakdownChart startDate={range.startDate} endDate={range.endDate} />
         </div>
         <div className="card">
-          <h3 className="text-lg font-semibold text-primary mb-2">Recurring Payments</h3>
-          <div className="space-y-2">
-            <div className="p-2 bg-gray-50 rounded">Payment 1</div>
-            <div className="p-2 bg-gray-50 rounded">Payment 2</div>
-            <div className="p-2 bg-gray-50 rounded">Payment 3</div>
-          </div>
+          <RecurringTransactionsList startDate={range.startDate} endDate={range.endDate} />
         </div>
       </div>
     </div>
