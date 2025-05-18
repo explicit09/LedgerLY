@@ -443,7 +443,7 @@
       "id": 7,
       "title": "Transaction Management API",
       "description": "Create APIs for users to view, edit, categorize, and manage their transactions.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -484,7 +484,7 @@
           "description": "Create a responsive login page with email/password fields, remember me option, and social login buttons.",
           "dependencies": [],
           "details": "UI Requirements: Clean, minimalist design with company branding; responsive layout for mobile and desktop. Form Validation: Email format validation, password minimum length check, error messages for invalid credentials. UX Considerations: Loading states during authentication, clear error messaging, keyboard navigation support, and auto-focus on email field.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 2,
@@ -494,7 +494,7 @@
             1
           ],
           "details": "UI Requirements: Multi-step form with progress indicator, password strength meter, terms and conditions checkbox. Form Validation: Email uniqueness check, password complexity requirements (uppercase, lowercase, numbers, special characters), matching password confirmation field. UX Considerations: Real-time validation feedback, clear next steps after registration, option to navigate back to login.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 3,
@@ -504,7 +504,7 @@
             1
           ],
           "details": "UI Requirements: Simple request form for email input, secure reset page with new password and confirmation fields. Form Validation: Email existence verification, secure token validation in URL, new password complexity requirements. UX Considerations: Clear instructions at each step, confirmation messages, expiration handling for reset links, and security notifications.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 4,
@@ -515,7 +515,7 @@
             2
           ],
           "details": "UI Requirements: Tabbed interface for different settings categories, profile photo upload, form fields for personal information. Form Validation: Current password verification for sensitive changes, input format validation for phone/email, file type and size validation for uploads. UX Considerations: Unsaved changes warnings, success confirmations, accessible form controls, and responsive design for all device sizes.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5,
@@ -527,7 +527,7 @@
             3
           ],
           "details": "UI Requirements: Loading states during authentication checks, conditional rendering based on auth state, session timeout notifications. Technical Requirements: JWT storage and refresh mechanism, secure token handling, automatic redirection for unauthenticated users. UX Considerations: Seamless re-authentication, persistent login across page refreshes, clear session status indicators, and graceful handling of expired sessions.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 6,
@@ -538,7 +538,7 @@
             5
           ],
           "details": "UI Requirements: Branded social login buttons, consistent styling with main authentication forms, loading indicators during OAuth process. Technical Requirements: OAuth flow implementation, account linking capabilities, proper error handling for failed social logins. UX Considerations: Clear permissions explanation, streamlined registration for new social users, fallback options if social authentication fails.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 7,
@@ -548,7 +548,7 @@
             5
           ],
           "details": "UI Requirements: Active sessions list in account settings, session timeout warnings, logout confirmation dialogs. Technical Requirements: Session tracking across devices, secure session storage, automatic token refresh mechanism. UX Considerations: Clear session activity indicators, easy session termination options, notifications for suspicious login attempts, and remember device functionality.",
-          "status": "pending"
+          "status": "done"
         }
       ]
     },
@@ -668,7 +668,7 @@
       "id": 13,
       "title": "Account Deletion and Data Removal",
       "description": "Implement functionality for users to delete their accounts and all associated data, including revoking Plaid access.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -708,7 +708,7 @@
       "id": 15,
       "title": "Final Testing, Bug Fixes, and Deployment",
       "description": "Conduct comprehensive testing, fix bugs, and prepare the application for deployment.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,

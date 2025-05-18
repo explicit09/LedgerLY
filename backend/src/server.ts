@@ -23,9 +23,10 @@ import { logger } from './utils/logger';
 // Import routes
 import plaidRoutes from './routes/plaid.routes';
 
-import analyticsRoutes from './routes/analytics.routes';
-
 import transactionRoutes from './routes/transaction.routes';
+=======
+
+import analyticsRoutes from './routes/analytics.routes';
 
 // Import auth middleware if needed
 // import { authMiddleware } from './middleware/auth.middleware';
@@ -85,10 +86,6 @@ app.use('/api/auth/register', authLimiter);
 
 // API Routes
 app.use('/api/plaid', plaidRoutes);
-app.use('/api/transactions', transactionRoutes);
-
-app.use('/api/analytics', analyticsRoutes);
-
 app.use('/api/transactions', transactionRoutes);
 
 
