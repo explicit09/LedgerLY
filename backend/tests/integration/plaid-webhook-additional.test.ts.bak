@@ -1,0 +1,173 @@
+import { Request, Response } from 'express';
+import { PlaidWebhookController } from '../../src/controllers/plaid-webhook.controller';
+import { prisma } from '../../src/lib/prisma';
+import { logger } from '../../src/utils/logger';
+
+// Mock the logger
+jest.mock('../../src/utils/logger', () => ({
+  logger: {
+    info: jest.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
+}));
+
+// Mock the Prisma client
+jest.mock('../../src/lib/prisma', () => {
+  const mockPrisma = {
+    plaidItem: {
+      findFirst: jest.fn(),
+      update: jest.fn(),
+    },
+    $queryRaw: jest.fn(),
+    $executeRaw: jest.fn(),
+  };
+  return { prisma: mockPrisma };
+});
+
+describe('PlaidWebhookController - Additional Tests', () => {
+  let mockPrisma: any;
+  let mockLogger: any;
+
+  beforeEach(() => {
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+    
+    // Get fresh mocks for each test
+    mockPrisma = prisma;
+    mockLogger = logger;
+  });
+
+  describe('handleTransactionsWebhook', () => {
+    it('should handle ERROR webhook', async () => {
+      const errorData = {
+        error_type: 'ITEM_ERROR',
+        error_code: 'ITEM_LOGIN_REQUIRED',
+        error_message: 'User login is required',
+      };
+
+      // Mock the Prisma response for finding the item
+      mockPrisma.plaidItem.findFirst.mockResolvedValueOnce({
+        id: 'test-item-id',
+        itemId: 'test-item-id',
+        accessToken: 'test-access-token',
+        status: 'ACTIVE',
+        userId: 'test-user-id',
+        user: {
+          id: 'test-user-id',
+          email: 'test@example.com'
+        }
+      });
+
+      // Setup request for ERROR webhook
+      const req = {
+        body: {
+          webhook_type: 'TRANSACTIONS',
+          webhook_code: 'ERROR',
+          item_id: 'test-item-id',
+          error: errorData,
+        },
+        headers: {},
+      } as Request;
+
+      // Create a mock response object
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        setHeader: jest.fn(),
+      } as unknown as Response;
+
+      // Mock the update
+      mockPrisma.plaidItem.update.mockResolvedValueOnce({});
+
+      // Call the controller method directly
+      await (PlaidWebhookController as any).handleTransactionsWebhook(req, res);
+
+      // Verify the item was updated with error status
+      expect(mockPrisma.plaidItem.update).toHaveBeenCalledWith({
+        where: { id: 'test-item-id' },
+        data: {
+          status: 'ERROR',
+          error: JSON.stringify(errorData),
+        },
+      });
+      
+      // Verify error was logged
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        'Error syncing transactions',
+        expect.objectContaining({
+          itemId: 'test-item-id',
+          userId: 'test-user-id',
+          webhookCode: 'ERROR',
+          error: errorData,
+        })
+      );
+      
+      // Verify the response was sent
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        success: true,
+        data: {
+          message: 'Webhook processed',
+        },
+      });
+    });
+
+    it('should handle unknown webhook code', async () => {
+      // Mock Prisma response for finding the item
+      mockPrisma.plaidItem.findFirst.mockResolvedValueOnce({
+        id: 'test-item-id',
+        itemId: 'test-item-id',
+        accessToken: 'test-access-token',
+        status: 'ACTIVE',
+        userId: 'test-user-id',
+        user: {
+          id: 'test-user-id',
+          email: 'test@example.com'
+        }
+      });
+
+      // Setup request with unknown webhook code
+      const req = {
+        body: {
+          webhook_type: 'TRANSACTIONS',
+          webhook_code: 'UNKNOWN_CODE',
+          item_id: 'test-item-id',
+        },
+        headers: {},
+      } as Request;
+
+      // Create a mock response object
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        setHeader: jest.fn(),
+      } as unknown as Response;
+
+      // Call the controller method directly
+      await (PlaidWebhookController as any).handleTransactionsWebhook(req, res);
+
+      // Verify warning was logged for unknown webhook code
+      expect(mockLogger.warn).toHaveBeenCalledWith(
+        'Unhandled transaction webhook code: UNKNOWN_CODE',
+        expect.objectContaining({
+          itemId: 'test-item-id',
+          userId: 'test-user-id',
+          webhookCode: 'UNKNOWN_CODE',
+          newTransactionsCount: undefined,
+          removedTransactionCount: 0,
+        })
+      );
+      
+      // Verify the response was still successful
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        success: true,
+        data: {
+          message: 'Webhook processed',
+        },
+      });
+    });
+  });
+});

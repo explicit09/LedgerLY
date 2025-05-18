@@ -1,0 +1,294 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication and profile
+model User {
+  id               String                 @id @default(uuid())
+  email            String                 @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  isEmailVerified  Boolean                @default(false)
+  verificationCode String?
+  resetToken       String?                @unique
+  resetTokenExpiry DateTime?
+  accounts         Account[]
+  categories       Category[]
+  transactions     Transaction[]
+  budgets          Budget[]
+  recurringTxns    RecurringTransaction[]
+  goals            FinancialGoal[]
+  reports          Report[]
+  notifications    Notification[]
+}
+
+// Account model for different financial accounts (checking, savings, credit cards, etc.)
+model Account {
+  id            String                 @id @default(uuid())
+  name          String
+  type          AccountType
+  balance       Decimal                @default(0)
+  currency      String                 @default("USD")
+  isActive      Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  userId        String
+  user          User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+  recurringTxns RecurringTransaction[]
+
+  @@index([userId])
+}
+
+// Transaction categories (income, expenses, etc.)
+model Category {
+  id            String                 @id @default(uuid())
+  name          String
+  type          CategoryType
+  color         String? // For UI representation
+  icon          String? // Icon identifier
+  isDefault     Boolean                @default(false)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+  userId        String? // Null for default categories
+  user          User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+  budgets       Budget[]
+  recurringTxns RecurringTransaction[]
+  parentId      String? // For subcategories
+  parent        Category?              @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  subcategories Category[]             @relation("CategoryHierarchy")
+
+  @@index([userId])
+}
+
+// Individual financial transactions
+model Transaction {
+  id             String                @id @default(uuid())
+  amount         Decimal
+  description    String
+  date           DateTime
+  type           TransactionType
+  status         TransactionStatus     @default(COMPLETED)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  accountId      String
+  account        Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  categoryId     String
+  category       Category              @relation(fields: [categoryId], references: [id])
+  userId         String
+  user           User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments    Attachment[]
+  tags           Tag[]
+  recurringTxnId String?
+  recurringTxn   RecurringTransaction? @relation(fields: [recurringTxnId], references: [id])
+
+  @@index([userId])
+  @@index([accountId])
+  @@index([categoryId])
+}
+
+// Recurring transactions (bills, subscriptions, etc.)
+model RecurringTransaction {
+  id            String             @id @default(uuid())
+  amount        Decimal
+  description   String
+  frequency     RecurringFrequency
+  startDate     DateTime
+  endDate       DateTime?
+  lastProcessed DateTime?
+  nextDueDate   DateTime
+  isActive      Boolean            @default(true)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  accountId     String
+  account       Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  categoryId    String
+  category      Category           @relation(fields: [categoryId], references: [id])
+  userId        String
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions  Transaction[]
+
+  @@index([userId])
+  @@index([accountId])
+}
+
+// Budget tracking
+model Budget {
+  id         String       @id @default(uuid())
+  amount     Decimal
+  period     BudgetPeriod
+  startDate  DateTime
+  endDate    DateTime
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  categoryId String
+  category   Category     @relation(fields: [categoryId], references: [id])
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([categoryId])
+}
+
+// Financial goals (saving targets, debt payoff, etc.)
+model FinancialGoal {
+  id            String    @id @default(uuid())
+  name          String
+  targetAmount  Decimal
+  currentAmount Decimal   @default(0)
+  deadline      DateTime?
+  isCompleted   Boolean   @default(false)
+  type          GoalType
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Transaction attachments (receipts, invoices, etc.)
+model Attachment {
+  id            String      @id @default(uuid())
+  filename      String
+  fileType      String
+  fileSize      Int
+  url           String
+  createdAt     DateTime    @default(now())
+  transactionId String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@index([transactionId])
+}
+
+// Transaction tags for flexible categorization
+model Tag {
+  id           String        @id @default(uuid())
+  name         String
+  transactions Transaction[]
+}
+
+// Custom reports
+model Report {
+  id            String          @id @default(uuid())
+  name          String
+  type          ReportType
+  parameters    Json // Stored report parameters
+  schedule      ReportSchedule?
+  lastGenerated DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// User notifications
+model Notification {
+  id        String           @id @default(uuid())
+  type      NotificationType
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// Enums for various model fields
+enum AccountType {
+  CHECKING
+  SAVINGS
+  CREDIT_CARD
+  INVESTMENT
+  LOAN
+  CASH
+  OTHER
+}
+
+enum CategoryType {
+  INCOME
+  EXPENSE
+  TRANSFER
+  INVESTMENT
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+  TRANSFER
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum RecurringFrequency {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum BudgetPeriod {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum GoalType {
+  SAVINGS
+  DEBT_PAYOFF
+  INVESTMENT
+  EMERGENCY_FUND
+  CUSTOM
+}
+
+enum ReportType {
+  EXPENSE_SUMMARY
+  INCOME_SUMMARY
+  CASH_FLOW
+  BUDGET_ANALYSIS
+  GOAL_PROGRESS
+  CUSTOM
+}
+
+enum ReportSchedule {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum NotificationType {
+  BILL_DUE
+  GOAL_MILESTONE
+  BUDGET_ALERT
+  ACCOUNT_ALERT
+  SYSTEM_NOTIFICATION
+}

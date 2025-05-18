@@ -1,0 +1,137 @@
+import { Request, Response, NextFunction } from 'express';
+// Import test utilities
+import * as testUtils from './test-utils';
+const { 
+  mockLogger, 
+  mockPrisma, 
+  mockSendSuccessResponse, 
+  mockSendErrorResponse,
+  resetMocks 
+} = testUtils;
+
+// Import the controller after setting up mocks
+import { PlaidWebhookController } from '../../src/controllers/plaid-webhook.controller';
+import { BadRequestError } from '../../src/errors/AppError';
+
+describe('PlaidWebhookController', () => {
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+  const next: NextFunction = jest.fn();
+
+  beforeEach(() => {
+    // Reset all mocks before each test
+    resetMocks();
+    
+    // Setup default request
+    req = {
+      body: {
+        webhook_type: 'TRANSACTIONS',
+        webhook_code: 'DEFAULT_UPDATE',
+        item_id: 'test-item-id',
+      },
+      headers: {
+        'content-type': 'application/json',
+        'user-agent': 'Jest Test Runner',
+        'x-plaid-verification': 'test-verification',
+      },
+    };
+
+    // Setup default response
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      setHeader: jest.fn(),
+    };
+  });
+
+  describe('handleWebhook', () => {
+    it('should process a valid TRANSACTIONS webhook request', async () => {
+      // Mock Prisma response
+      mockPrisma.plaidItem.findFirst.mockResolvedValueOnce({
+        id: 'test-item-id',
+        itemId: 'test-item-id',
+        accessToken: 'test-access-token',
+        status: 'ACTIVE',
+        userId: 'test-user-id',
+        user: {
+          id: 'test-user-id',
+          email: 'test@example.com'
+        }
+      });
+
+      // Setup request with TRANSACTIONS webhook type
+      const req = {
+        body: {
+          webhook_type: 'TRANSACTIONS',
+          webhook_code: 'DEFAULT_UPDATE',
+          item_id: 'test-item-id',
+        },
+        headers: {},
+      } as Request;
+
+      // Create a mock response object
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        setHeader: jest.fn(),
+      } as unknown as Response;
+
+      // Call the controller method
+      await PlaidWebhookController.handleWebhook(
+        req,
+        res,
+        next
+      );
+
+      // Verify the response
+      expect(mockPrisma.plaidItem.findFirst).toHaveBeenCalledWith({
+        where: { itemId: 'test-item-id' },
+        include: { user: true },
+      });
+      
+      // Verify success response was sent
+      expect(mockSendSuccessResponse).toHaveBeenCalled();
+    });
+
+    it('should handle missing webhook type', async () => {
+      // Setup request with missing webhook_type
+      const req = {
+        body: {
+          item_id: 'test-item-id',
+        },
+        headers: {},
+      } as Request;
+
+      // Create a mock response object
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+        setHeader: jest.fn(),
+      } as unknown as Response;
+
+      // Create a mock next function
+      const next = jest.fn();
+
+      // Mock the error response
+      mockSendErrorResponse.mockImplementationOnce((res, error) => {
+        expect(error).toBeInstanceOf(BadRequestError);
+        expect(error.message).toBe('Missing webhook_type in request body');
+      });
+
+      // Call the controller method
+      await PlaidWebhookController.handleWebhook(
+        req,
+        res,
+        next
+      );
+
+      // Verify the error was handled
+      expect(next).toHaveBeenCalled();
+      
+      // Get the error that was passed to next
+      const error = next.mock.calls[0][0];
+      expect(error).toBeInstanceOf(BadRequestError);
+      expect(error.message).toBe('Missing webhook_type in request body');
+    });
+  });
+});

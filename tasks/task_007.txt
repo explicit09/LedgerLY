@@ -1,0 +1,78 @@
+# Task ID: 7
+# Title: Transaction Management API
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 16, 17, 18, 19
+# Priority: medium
+# Description: Create APIs for users to view, edit, categorize, and manage their transactions.
+# Details:
+1. Implement transaction listing API with filtering and pagination
+2. Create transaction update endpoint for editing categories and notes
+3. Implement recurring flag toggle endpoint
+4. Add transaction search functionality
+5. Create transaction detail endpoint
+
+Example transaction controller:
+```javascript
+// GET /api/transactions
+async function getTransactions(req, res) {
+  const userId = req.user.id;
+  const { page = 1, limit = 50, startDate, endDate, category, search } = req.query;
+  
+  const transactions = await transactionService.findTransactions({
+    userId,
+    page: parseInt(page),
+    limit: parseInt(limit),
+    startDate,
+    endDate,
+    category,
+    search
+  });
+  
+  const total = await transactionService.countTransactions({
+    userId,
+    startDate,
+    endDate,
+    category,
+    search
+  });
+  
+  res.json({
+    transactions,
+    pagination: {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      total,
+      pages: Math.ceil(total / parseInt(limit))
+    }
+  });
+}
+
+// PATCH /api/transactions/:id
+async function updateTransaction(req, res) {
+  const userId = req.user.id;
+  const transactionId = req.params.id;
+  const { category, notes, isRecurring } = req.body;
+  
+  // Verify transaction belongs to user
+  const transaction = await transactionService.findById(transactionId);
+  if (!transaction || transaction.userId !== userId) {
+    return res.status(404).json({ error: 'Transaction not found' });
+  }
+  
+  const updatedTransaction = await transactionService.updateTransaction(
+    transactionId,
+    { category, notes, isRecurring }
+  );
+  
+  res.json(updatedTransaction);
+}
+```
+
+# Test Strategy:
+1. Unit tests for transaction service functions
+2. Integration tests for all API endpoints
+3. Test pagination and filtering
+4. Test transaction updates
+5. Verify user can only access their own transactions
+6. Test search functionality
+7. Performance testing with large transaction sets

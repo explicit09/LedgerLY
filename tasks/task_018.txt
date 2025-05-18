@@ -1,0 +1,93 @@
+# Task ID: 18
+# Title: Task #18: Design Initial Wireframes for LedgerLY Core User Flows
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Create low-fidelity wireframes for LedgerLY's critical user journeys including registration/login, bank connection onboarding, main dashboard, and transaction editing interfaces, emphasizing clarity, minimalism, and trust-building design elements.
+# Details:
+The wireframes should be created using industry-standard design tools (Figma, Sketch, or Adobe XD) and include the following key screens:
+
+1. Registration and Login:
+   - User registration form with appropriate fields (name, email, password)
+   - Password requirements and strength indicator
+   - Email verification flow
+   - Login screen with forgot password option
+   - Two-factor authentication screens (if applicable)
+
+2. Onboarding (Bank Connection):
+   - Step-by-step bank connection wizard
+   - Bank selection interface
+   - Secure credential input screens
+   - Connection success/failure states
+   - Multi-account selection if user has multiple accounts
+   - Clear security/privacy messaging throughout
+
+3. Main Dashboard:
+   - Overview section with key financial metrics
+   - Account balance summary
+   - Income vs. expenses visualization
+   - Spending by category charts
+   - Recent transactions list (preview of 5-7 most recent)
+   - Quick actions menu
+   - Navigation to other sections
+
+4. Transaction Management:
+   - Transaction list/table with filtering and sorting options
+   - Transaction detail view
+   - Edit transaction form (category, tags, notes, split transaction)
+   - Bulk edit capabilities
+   - Search and filter mechanisms
+
+Design Principles to Follow:
+- Prioritize clarity: Use ample white space, clear hierarchy, and intuitive layouts
+- Embrace minimalism: Remove unnecessary elements, focus on essential information
+- Build trust: Include security indicators, clear data handling messaging
+- Ensure accessibility: Consider contrast, text size, and touch targets
+- Maintain consistency with the UI Style Guide (Task #16)
+- Incorporate components from the UI Component Library (Task #17)
+
+Deliverables should include:
+- Complete set of wireframes for all specified screens
+- User flow diagrams showing the connection between screens
+- Annotations explaining key interactions and functionality
+- Mobile and desktop versions of critical screens
+
+# Test Strategy:
+The wireframes will be evaluated through the following methods:
+
+1. Design Review:
+   - Conduct a formal design review with the product team, developers, and stakeholders
+   - Verify all required screens and user flows are represented
+   - Ensure wireframes align with the UI Style Guide (Task #16)
+   - Confirm wireframes incorporate components from the UI Component Library (Task #17)
+   - Check that design principles (clarity, minimalism, trust) are properly applied
+
+2. User Flow Validation:
+   - Walk through each user journey step-by-step to identify any gaps or dead-ends
+   - Verify logical progression between screens
+   - Ensure all error states and edge cases are accounted for
+   - Confirm that navigation patterns are consistent and intuitive
+
+3. Stakeholder Feedback:
+   - Present wireframes to key stakeholders for feedback
+   - Document and prioritize suggested changes
+   - Iterate on designs based on feedback
+
+4. Usability Testing:
+   - Conduct informal usability tests with 3-5 representative users
+   - Create simple tasks for users to complete using the wireframes
+   - Observe and document any points of confusion or friction
+   - Collect qualitative feedback on the overall experience
+
+5. Developer Feasibility Check:
+   - Review wireframes with development team to ensure technical feasibility
+   - Identify any potential implementation challenges
+   - Confirm alignment with planned backend functionality
+
+Acceptance Criteria:
+- Complete set of wireframes covering all specified user flows
+- Documentation of user journeys and screen connections
+- Alignment with UI Style Guide and Component Library
+- Positive feedback from stakeholder review
+- Validation through initial usability testing
+- Sign-off from product owner and development lead

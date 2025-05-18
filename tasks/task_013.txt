@@ -1,0 +1,142 @@
+# Task ID: 13
+# Title: Account Deletion and Data Removal
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 5, 16, 17, 18, 19
+# Priority: medium
+# Description: Implement functionality for users to delete their accounts and all associated data, including revoking Plaid access.
+# Details:
+1. Create account deletion confirmation UI
+2. Implement backend endpoint for account deletion
+3. Add Plaid access token revocation
+4. Implement cascading deletion of all user data
+5. Add confirmation email for account deletion
+
+Example implementation:
+```javascript
+// Backend
+async function deleteAccount(req, res) {
+  const userId = req.user.id;
+  const { password } = req.body;
+  
+  try {
+    // Verify password
+    const user = await userRepository.findById(userId);
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+    
+    // Get all Plaid connections
+    const connections = await bankConnectionRepository.findByUserId(userId);
+    
+    // Revoke Plaid access tokens
+    for (const connection of connections) {
+      try {
+        const decryptedToken = decryptAccessToken(connection.plaid_access_token);
+        await plaidClient.itemRemove({
+          access_token: decryptedToken
+        });
+      } catch (error) {
+        console.error(`Failed to revoke Plaid access for connection ${connection.id}`, error);
+        // Continue with deletion even if token revocation fails
+      }
+    }
+    
+    // Delete all user data in order
+    await transactionRepository.deleteByUserId(userId);
+    await recurringTransactionRepository.deleteByUserId(userId);
+    await bankConnectionRepository.deleteByUserId(userId);
+    await userRepository.deleteById(userId);
+    
+    // Send confirmation email
+    await emailService.sendAccountDeletionConfirmation(user.email);
+    
+    res.json({ success: true, message: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Failed to delete account', error);
+    res.status(500).json({ error: 'Failed to delete account' });
+  }
+}
+
+// Frontend
+function DeleteAccountSection() {
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  
+  async function handleDeleteAccount() {
+    if (!password) {
+      setError('Password is required');
+      return;
+    }
+    
+    setDeleting(true);
+    setError('');
+    
+    try {
+      await api.post('/auth/delete-account', { password });
+      await logout();
+      navigate('/');
+    } catch (error) {
+      setError(error.response?.data?.error || 'Failed to delete account');
+      setDeleting(false);
+    }
+  }
+  
+  return (
+    <div className="delete-account-section">
+      <h3>Delete Account</h3>
+      <p>This will permanently delete your account and all your data. This action cannot be undone.</p>
+      
+      {!showConfirmation ? (
+        <button 
+          className="danger-button" 
+          onClick={() => setShowConfirmation(true)}
+        >
+          Delete My Account
+        </button>
+      ) : (
+        <div className="confirmation-form">
+          <p>Please enter your password to confirm deletion:</p>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Your password"
+          />
+          {error && <div className="error-message">{error}</div>}
+          <div className="button-group">
+            <button 
+              className="cancel-button" 
+              onClick={() => setShowConfirmation(false)}
+              disabled={deleting}
+            >
+              Cancel
+            </button>
+            <button 
+              className="danger-button" 
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+            >
+              {deleting ? 'Deleting...' : 'Confirm Deletion'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+# Test Strategy:
+1. Unit tests for account deletion functions
+2. Test Plaid token revocation
+3. Test cascading deletion of all user data
+4. Test password verification
+5. Test confirmation UI flow
+6. Verify all user data is completely removed
+7. Test error handling for failed deletions

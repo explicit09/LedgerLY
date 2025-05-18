@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+  output          = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String    @unique
+  password            String
+  firstName           String
+  lastName            String
+  verificationCode    String?
+  verified            Boolean   @default(false)
+  resetToken          String?
+  resetTokenExpiresAt DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  accounts            Account[]
+  transactions        Transaction[]
+  plaidItems          PlaidItem[]
+}
+
+model Account {
+  id          String       @id @default(uuid())
+  name        String
+  type        String
+  balance     Float        @default(0)
+  currency    String       @default("USD")
+  color       String?
+  icon        String?
+  isActive    Boolean      @default(true)
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([userId])
+}
+
+model Transaction {
+  isRecurring       Boolean?   @default(false)
+  recurringFrequency String?
+
+  id                 String     @id @default(uuid())
+  amount            Float
+  type              String     // 'INCOME', 'EXPENSE', 'TRANSFER'
+  category         String?
+  description      String?
+  date             DateTime   @default(now())
+  accountId        String
+  account          Account    @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  userId           String
+  user             User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plaidItemId      String?
+  plaidItem        PlaidItem? @relation(fields: [plaidItemId], references: [id], onDelete: Cascade)
+  plaidTransactionId String?   @unique // Unique ID from Plaid
+  isActive         Boolean    @default(true) // For soft deletes
+  pending          Boolean    @default(false) // For transactions that need review
+  authorizedAccountId String?  // Authorized account ID from Plaid
+  transactionMetadata Json?    // Transaction metadata from Plaid
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  @@index([accountId])
+  @@index([userId])
+  @@index([plaidItemId])
+  @@index([plaidTransactionId])
+  @@index([date])
+}
+
+model PlaidItem {
+  id               String       @id @default(uuid())
+  itemId           String       @unique
+  institutionId    String
+  institutionName  String
+  accessToken      String       @db.Text
+  status           String       @default("ACTIVE") // ACTIVE, ERROR, PENDING_EXPIRATION, REVOKED
+  error           String?      @db.Text // Store any error messages
+  lastSyncedAt    DateTime?    // Last successful sync
+  lastWebhookReceivedAt DateTime? // When we last received a webhook for this item
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions    Transaction[] // Relation to transactions
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([institutionId])
+  @@index([status])
+}

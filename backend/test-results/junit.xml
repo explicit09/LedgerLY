@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="56" failures="24" errors="0" time="1.766">
+  <testsuite name="tests/unit/services/aws-secrets.service.test.ts" errors="0" failures="6" skipped="0" timestamp="2025-05-16T08:10:04" time="0.319" tests="9">
+    <testcase classname="AwsSecretsService &gt; getSecret should retrieve a secret by name" name="AwsSecretsService &gt; getSecret should retrieve a secret by name" time="0.002">
+      <failure>Error: Failed to retrieve secret: Unexpected token &apos;e&apos;, &quot;test-secret-value&quot; is not valid JSON
+    at AwsSecretsService.getSecret (/Users/tadies/Projects/LedgerLY/backend/src/services/secrets/aws-secrets.service.ts:250:13)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/aws-secrets.service.test.ts:82:27)</failure>
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should handle nested secret paths" name="AwsSecretsService &gt; getSecret should handle nested secret paths" time="0.001">
+      <failure>Error: Failed to retrieve secret: Secrets Manager can&apos;t find the specified secret.
+    at AwsSecretsService.getSecret (/Users/tadies/Projects/LedgerLY/backend/src/services/secrets/aws-secrets.service.ts:250:13)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/aws-secrets.service.test.ts:93:27)</failure>
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should return null for non-existent secrets when not required" name="AwsSecretsService &gt; getSecret should return null for non-existent secrets when not required" time="0">
+      <failure>Error: Failed to retrieve secret: Secrets Manager can&apos;t find the specified secret.
+    at AwsSecretsService.getSecret (/Users/tadies/Projects/LedgerLY/backend/src/services/secrets/aws-secrets.service.ts:250:13)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/aws-secrets.service.test.ts:103:27)</failure>
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should throw an error for non-existent secrets when required" name="AwsSecretsService &gt; getSecret should throw an error for non-existent secrets when required" time="0.001">
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should use cached value for subsequent requests" name="AwsSecretsService &gt; getSecret should use cached value for subsequent requests" time="0.001">
+      <failure>Error: Failed to retrieve secret: Unexpected token &apos;e&apos;, &quot;test-secret-value&quot; is not valid JSON
+    at AwsSecretsService.getSecret (/Users/tadies/Projects/LedgerLY/backend/src/services/secrets/aws-secrets.service.ts:250:13)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/aws-secrets.service.test.ts:121:25)</failure>
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should handle JSON secret values" name="AwsSecretsService &gt; getSecret should handle JSON secret values" time="0.001">
+      <failure>Error: expect(received).toEqual(expected) // deep equality
+
+Expected: &quot;{\&quot;key\&quot;:\&quot;value\&quot;,\&quot;number\&quot;:123,\&quot;nested\&quot;:{\&quot;prop\&quot;:\&quot;nested-value\&quot;}}&quot;
+Received: {&quot;key&quot;: &quot;value&quot;, &quot;nested&quot;: {&quot;prop&quot;: &quot;nested-value&quot;}, &quot;number&quot;: 123}
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/aws-secrets.service.test.ts:139:27)</failure>
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should handle binary secret values" name="AwsSecretsService &gt; getSecret should handle binary secret values" time="0.001">
+      <failure>Error: Failed to retrieve secret: Unexpected token &apos;b&apos;, &quot;binary-secret-data&quot; is not valid JSON
+    at AwsSecretsService.getSecret (/Users/tadies/Projects/LedgerLY/backend/src/services/secrets/aws-secrets.service.ts:250:13)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/aws-secrets.service.test.ts:153:27)</failure>
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should handle AWS errors gracefully" name="AwsSecretsService &gt; getSecret should handle AWS errors gracefully" time="0.001">
+    </testcase>
+    <testcase classname="AwsSecretsService &gt; getSecret should handle access denied errors" name="AwsSecretsService &gt; getSecret should handle access denied errors" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/unit/services/database.service.test.ts" errors="0" failures="6" skipped="0" timestamp="2025-05-16T08:10:05" time="0.333" tests="10">
+    <testcase classname="DatabaseService &gt; getInstance should return the same instance when called multiple times" name="DatabaseService &gt; getInstance should return the same instance when called multiple times" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseService &gt; initialize should initialize the database connection" name="DatabaseService &gt; initialize should initialize the database connection" time="0.025">
+      <failure>Error: Please install pg package manually
+    at ConnectionManager._loadDialectModule (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/abstract/connection-manager.js:81:15)
+    at new ConnectionManager (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/connection-manager.js:18:24)
+    at new PostgresDialect (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/index.js:15:30)
+    at new Sequelize (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/sequelize.js:368:20)
+    at DatabaseService.initialize (/Users/tadies/Projects/LedgerLY/backend/src/database/database.service.ts:39:24)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/database.service.test.ts:77:7)</failure>
+    </testcase>
+    <testcase classname="DatabaseService &gt; initialize should not reinitialize if already initialized" name="DatabaseService &gt; initialize should not reinitialize if already initialized" time="0.001">
+      <failure>Error: Please install pg package manually
+    at ConnectionManager._loadDialectModule (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/abstract/connection-manager.js:81:15)
+    at new ConnectionManager (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/connection-manager.js:18:24)
+    at new PostgresDialect (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/index.js:15:30)
+    at new Sequelize (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/sequelize.js:368:20)
+    at DatabaseService.initialize (/Users/tadies/Projects/LedgerLY/backend/src/database/database.service.ts:39:24)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/database.service.test.ts:112:7)</failure>
+    </testcase>
+    <testcase classname="DatabaseService &gt; initialize should handle initialization errors" name="DatabaseService &gt; initialize should handle initialization errors" time="0.003">
+      <failure>Error: expect(received).rejects.toThrow(expected)
+
+Expected message: &quot;Connection failed&quot;
+Received message: &quot;Please install pg package manually&quot;
+
+      37 |
+      38 |       // Configure Sequelize
+    &gt; 39 |       this.sequelize = new Sequelize(dbConfig.url, {
+         |                        ^
+      40 |         dialect: &apos;postgres&apos;,
+      41 |         logging: appConfig.isDevelopment ? (msg) =&gt; logger.debug(msg) : false,
+      42 |         define: {
+
+      at ConnectionManager._loadDialectModule (../node_modules/sequelize/src/dialects/abstract/connection-manager.js:81:15)
+      at new ConnectionManager (../node_modules/sequelize/src/dialects/postgres/connection-manager.js:18:24)
+      at new PostgresDialect (../node_modules/sequelize/src/dialects/postgres/index.js:15:30)
+      at new Sequelize (../node_modules/sequelize/src/sequelize.js:368:20)
+      at DatabaseService.initialize (src/database/database.service.ts:39:24)
+      at async Object.&lt;anonymous&gt; (tests/unit/services/database.service.test.ts:130:7)
+    at Object.toThrow (/Users/tadies/Projects/LedgerLY/backend/node_modules/expect/build/index.js:218:22)
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/database.service.test.ts:130:58)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="DatabaseService &gt; close should close the database connection" name="DatabaseService &gt; close should close the database connection" time="0.002">
+      <failure>Error: Please install pg package manually
+    at ConnectionManager._loadDialectModule (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/abstract/connection-manager.js:81:15)
+    at new ConnectionManager (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/connection-manager.js:18:24)
+    at new PostgresDialect (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/index.js:15:30)
+    at new Sequelize (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/sequelize.js:368:20)
+    at DatabaseService.initialize (/Users/tadies/Projects/LedgerLY/backend/src/database/database.service.ts:39:24)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/database.service.test.ts:144:7)</failure>
+    </testcase>
+    <testcase classname="DatabaseService &gt; close should not throw if connection is already closed" name="DatabaseService &gt; close should not throw if connection is already closed" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseService &gt; getSequelize should return the Sequelize instance when initialized" name="DatabaseService &gt; getSequelize should return the Sequelize instance when initialized" time="0.001">
+      <failure>Error: Please install pg package manually
+    at ConnectionManager._loadDialectModule (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/abstract/connection-manager.js:81:15)
+    at new ConnectionManager (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/connection-manager.js:18:24)
+    at new PostgresDialect (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/index.js:15:30)
+    at new Sequelize (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/sequelize.js:368:20)
+    at DatabaseService.initialize (/Users/tadies/Projects/LedgerLY/backend/src/database/database.service.ts:39:24)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/database.service.test.ts:165:7)</failure>
+    </testcase>
+    <testcase classname="DatabaseService &gt; getSequelize should throw if not initialized" name="DatabaseService &gt; getSequelize should throw if not initialized" time="0">
+    </testcase>
+    <testcase classname="DatabaseService &gt; isConnected should return false when not initialized" name="DatabaseService &gt; isConnected should return false when not initialized" time="0.001">
+    </testcase>
+    <testcase classname="DatabaseService &gt; isConnected should return true when initialized" name="DatabaseService &gt; isConnected should return true when initialized" time="0.001">
+      <failure>Error: Please install pg package manually
+    at ConnectionManager._loadDialectModule (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/abstract/connection-manager.js:81:15)
+    at new ConnectionManager (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/connection-manager.js:18:24)
+    at new PostgresDialect (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/dialects/postgres/index.js:15:30)
+    at new Sequelize (/Users/tadies/Projects/LedgerLY/node_modules/sequelize/src/sequelize.js:368:20)
+    at DatabaseService.initialize (/Users/tadies/Projects/LedgerLY/backend/src/database/database.service.ts:39:24)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/unit/services/database.service.test.ts:186:7)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/integration/aws-secrets.test.ts" errors="0" failures="6" skipped="0" timestamp="2025-05-16T08:10:05" time="0.765" tests="6">
+    <testcase classname="AWS Secrets Manager Integration &gt; Configuration Service should load all required configurations" name="AWS Secrets Manager Integration &gt; Configuration Service should load all required configurations" time="0.196">
+      <failure>Error: Failed to load Plaid configuration
+    at ConfigService.getPlaidConfig (/Users/tadies/Projects/LedgerLY/backend/src/config/config.service.ts:208:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Promise.all (index 2)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/integration/aws-secrets.test.ts:26:23)</failure>
+    </testcase>
+    <testcase classname="AWS Secrets Manager Integration &gt; Configuration Service should load database configuration" name="AWS Secrets Manager Integration &gt; Configuration Service should load database configuration" time="0.158">
+      <failure>Error: Failed to load database configuration
+    at ConfigService.getDatabaseConfig (/Users/tadies/Projects/LedgerLY/backend/src/config/config.service.ts:146:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/integration/aws-secrets.test.ts:45:24)</failure>
+    </testcase>
+    <testcase classname="AWS Secrets Manager Integration &gt; Configuration Service should load JWT configuration" name="AWS Secrets Manager Integration &gt; Configuration Service should load JWT configuration" time="0.162">
+      <failure>Error: Failed to load JWT configuration
+    at ConfigService.getJwtConfig (/Users/tadies/Projects/LedgerLY/backend/src/config/config.service.ts:177:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/integration/aws-secrets.test.ts:64:25)</failure>
+    </testcase>
+    <testcase classname="AWS Secrets Manager Integration &gt; Configuration Service should load Plaid configuration" name="AWS Secrets Manager Integration &gt; Configuration Service should load Plaid configuration" time="0.17">
+      <failure>Error: Failed to load Plaid configuration
+    at ConfigService.getPlaidConfig (/Users/tadies/Projects/LedgerLY/backend/src/config/config.service.ts:208:15)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/integration/aws-secrets.test.ts:80:27)</failure>
+    </testcase>
+    <testcase classname="AWS Secrets Manager Integration &gt; Database Connection should connect to the database and execute queries" name="AWS Secrets Manager Integration &gt; Database Connection should connect to the database and execute queries" time="0.001">
+      <failure>TypeError: A dynamic import callback was invoked without --experimental-vm-modules
+    at importModuleDynamicallyCallback (node:internal/modules/esm/utils:270:11)
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/integration/aws-secrets.test.ts:97:35)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="AWS Secrets Manager Integration &gt; Database Connection should handle connection errors gracefully" name="AWS Secrets Manager Integration &gt; Database Connection should handle connection errors gracefully" time="0.001">
+      <failure>TypeError: A dynamic import callback was invoked without --experimental-vm-modules
+    at importModuleDynamicallyCallback (node:internal/modules/esm/utils:270:11)
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/integration/aws-secrets.test.ts:151:35)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/secret-config.test.ts" errors="0" failures="6" skipped="0" timestamp="2025-05-16T08:10:06" time="0.051" tests="12">
+    <testcase classname="Secret Configuration &gt; getSecretId should prefix secret name with environment" name="Secret Configuration &gt; getSecretId should prefix secret name with environment" time="0.001">
+    </testcase>
+    <testcase classname="Secret Configuration &gt; getSecretId should not add duplicate environment prefix" name="Secret Configuration &gt; getSecretId should not add duplicate environment prefix" time="0">
+    </testcase>
+    <testcase classname="Secret Configuration &gt; getSecretId should handle empty environment by using default" name="Secret Configuration &gt; getSecretId should handle empty environment by using default" time="0">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;development/database/credentials&quot;
+Received: &quot;test/database/credentials&quot;
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/secret-config.test.ts:28:51)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="Secret Configuration &gt; getSecretIdForEnv should use specified environment prefix" name="Secret Configuration &gt; getSecretIdForEnv should use specified environment prefix" time="0">
+    </testcase>
+    <testcase classname="Secret Configuration &gt; getSecretIdForEnv should replace existing environment prefix" name="Secret Configuration &gt; getSecretIdForEnv should replace existing environment prefix" time="0.001">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;production/database/credentials&quot;
+Received: &quot;production/test/database/credentials&quot;
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/secret-config.test.ts:38:76)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="Secret Configuration &gt; getSecretPrefix should return environment prefix with trailing slash" name="Secret Configuration &gt; getSecretPrefix should return environment prefix with trailing slash" time="0">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;staging/&quot;
+Received: &quot;test/&quot;
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/secret-config.test.ts:45:33)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="Secret Configuration &gt; getSecretPrefix should use default environment when not set" name="Secret Configuration &gt; getSecretPrefix should use default environment when not set" time="0.001">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: &quot;development/&quot;
+Received: &quot;test/&quot;
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/secret-config.test.ts:50:33)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="Secret Configuration &gt; isSecretAccessAllowed should allow access to current environment secrets" name="Secret Configuration &gt; isSecretAccessAllowed should allow access to current environment secrets" time="0">
+    </testcase>
+    <testcase classname="Secret Configuration &gt; isSecretAccessAllowed should allow access to shared secrets (no env prefix)" name="Secret Configuration &gt; isSecretAccessAllowed should allow access to shared secrets (no env prefix)" time="0.001">
+      <failure>Error: expect(received).toBe(expected) // Object.is equality
+
+Expected: true
+Received: false
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/secret-config.test.ts:65:54)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+    <testcase classname="Secret Configuration &gt; isSecretAccessAllowed should allow access to secrets under AWS_SECRETS_PREFIX" name="Secret Configuration &gt; isSecretAccessAllowed should allow access to secrets under AWS_SECRETS_PREFIX" time="0">
+    </testcase>
+    <testcase classname="Secret Configuration &gt; isSecretAccessAllowed should deny access to other environments&apos; secrets" name="Secret Configuration &gt; isSecretAccessAllowed should deny access to other environments&apos; secrets" time="0.001">
+    </testcase>
+    <testcase classname="Secret Configuration &gt; isSecretAccessAllowed should handle undefined or null input" name="Secret Configuration &gt; isSecretAccessAllowed should handle undefined or null input" time="0">
+      <failure>TypeError: Cannot read properties of undefined (reading &apos;includes&apos;)
+    at isSecretAccessAllowed (/Users/tadies/Projects/LedgerLY/backend/src/services/secrets/secret-config.ts:61:17)
+    at Object.&lt;anonymous&gt; (/Users/tadies/Projects/LedgerLY/backend/tests/secret-config.test.ts:77:35)
+    at Promise.then.completed (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:298:28)
+    at new Promise (&lt;anonymous&gt;)
+    at callAsyncCircusFn (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/utils.js:231:10)
+    at _callCircusTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:316:40)
+    at async _runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:252:3)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:126:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async _runTestsForDescribeBlock (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:121:9)
+    at async run (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/run.js:71:3)
+    at async runAndTransformResultsToJestFormat (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)
+    at async jestAdapter (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)
+    at async runTestInternal (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:367:16)
+    at async runTest (/Users/tadies/Projects/LedgerLY/backend/node_modules/jest-runner/build/runTest.js:444:34)</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/unit/services/config.service.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-05-16T08:10:06" time="0.035" tests="13">
+    <testcase classname="ConfigService &gt; getDatabaseConfig should return database configuration from secrets manager" name="ConfigService &gt; getDatabaseConfig should return database configuration from secrets manager" time="0.001">
+    </testcase>
+    <testcase classname="ConfigService &gt; getDatabaseConfig should throw an error when database configuration is not found" name="ConfigService &gt; getDatabaseConfig should throw an error when database configuration is not found" time="0.002">
+    </testcase>
+    <testcase classname="ConfigService &gt; getDatabaseConfig should use default values when no configuration is found" name="ConfigService &gt; getDatabaseConfig should use default values when no configuration is found" time="0.003">
+    </testcase>
+    <testcase classname="ConfigService &gt; getJwtConfig should return JWT configuration from secrets manager" name="ConfigService &gt; getJwtConfig should return JWT configuration from secrets manager" time="0.001">
+    </testcase>
+    <testcase classname="ConfigService &gt; getJwtConfig should throw an error when JWT secrets are not found" name="ConfigService &gt; getJwtConfig should throw an error when JWT secrets are not found" time="0">
+    </testcase>
+    <testcase classname="ConfigService &gt; getJwtConfig should throw an error if JWT secret is not configured" name="ConfigService &gt; getJwtConfig should throw an error if JWT secret is not configured" time="0">
+    </testcase>
+    <testcase classname="ConfigService &gt; getPlaidConfig should return Plaid configuration from secrets manager" name="ConfigService &gt; getPlaidConfig should return Plaid configuration from secrets manager" time="0.001">
+    </testcase>
+    <testcase classname="ConfigService &gt; getPlaidConfig should throw an error when Plaid configuration is not found in secrets" name="ConfigService &gt; getPlaidConfig should throw an error when Plaid configuration is not found in secrets" time="0">
+    </testcase>
+    <testcase classname="ConfigService &gt; getAwsConfig should return AWS configuration from environment variables" name="ConfigService &gt; getAwsConfig should return AWS configuration from environment variables" time="0.001">
+    </testcase>
+    <testcase classname="ConfigService &gt; getAwsConfig should not include credentials when not in development" name="ConfigService &gt; getAwsConfig should not include credentials when not in development" time="0">
+    </testcase>
+    <testcase classname="ConfigService &gt; getAppConfig should return application configuration for test environment" name="ConfigService &gt; getAppConfig should return application configuration for test environment" time="0.001">
+    </testcase>
+    <testcase classname="ConfigService &gt; getAppConfig should detect development environment" name="ConfigService &gt; getAppConfig should detect development environment" time="0">
+    </testcase>
+    <testcase classname="ConfigService &gt; getAppConfig should detect production environment" name="ConfigService &gt; getAppConfig should detect production environment" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="tests/encryption.test.ts" errors="0" failures="0" skipped="0" timestamp="2025-05-16T08:10:06" time="0.115" tests="6">
+    <testcase classname="Encryption Service &gt; Basic Encryption should encrypt and decrypt string data" name="Encryption Service &gt; Basic Encryption should encrypt and decrypt string data" time="0.001">
+    </testcase>
+    <testcase classname="Encryption Service &gt; Basic Encryption should encrypt and decrypt object data" name="Encryption Service &gt; Basic Encryption should encrypt and decrypt object data" time="0.001">
+    </testcase>
+    <testcase classname="Encryption Service &gt; Basic Encryption should detect encrypted strings" name="Encryption Service &gt; Basic Encryption should detect encrypted strings" time="0.001">
+    </testcase>
+    <testcase classname="Encryption Service &gt; Basic Encryption should throw error when decrypting non-encrypted data" name="Encryption Service &gt; Basic Encryption should throw error when decrypting non-encrypted data" time="0.005">
+    </testcase>
+    <testcase classname="Encryption Service &gt; Database Integration should encrypt sensitive fields when creating a user" name="Encryption Service &gt; Database Integration should encrypt sensitive fields when creating a user" time="0.011">
+    </testcase>
+    <testcase classname="Encryption Service &gt; Database Integration should handle updating encrypted fields" name="Encryption Service &gt; Database Integration should handle updating encrypted fields" time="0.005">
+    </testcase>
+  </testsuite>
+</testsuites>

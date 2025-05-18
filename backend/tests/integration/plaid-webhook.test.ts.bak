@@ -1,0 +1,273 @@
+// Set up the environment before any imports
+process.env.NODE_ENV = 'test';
+
+import { Request, Response, NextFunction } from 'express';
+import { PlaidWebhookController } from '../../src/controllers/plaid-webhook.controller';
+
+// Mock the logger
+const mockLogger = {
+  info: jest.fn(),
+  error: jest.fn(),
+  debug: jest.fn(),
+};
+
+// Mock the encryption service
+const mockEncryptionService = {
+  decrypt: jest.fn().mockImplementation((token: string) => token),
+  encrypt: jest.fn().mockImplementation((token: string) => token),
+};
+
+// Mock Prisma client
+const mockPrisma = {
+  plaidItem: {
+    findFirst: jest.fn(),
+    update: jest.fn(),
+    findMany: jest.fn(),
+  },
+  $transaction: jest.fn().mockImplementation(async (callback) => {
+    return callback(mockPrisma);
+  }),
+};
+
+// Mock the dependencies
+jest.mock('../../src/utils/logger', () => ({
+  logger: mockLogger,
+}));
+
+jest.mock('../../src/services/encryption.service', () => ({
+  encryptionService: mockEncryptionService,
+}));
+
+jest.mock('@prisma/client', () => ({
+  PrismaClient: jest.fn().mockImplementation(() => mockPrisma),
+}));
+
+// Mock NextFunction
+const mockNext = jest.fn() as jest.MockedFunction<NextFunction>;
+
+describe('Plaid Webhook Controller', () => {
+  describe('handleWebhook', () => {
+    it('should process a valid webhook request', async () => {
+      // Mock request and response objects
+      const req = {
+        body: {
+          webhook_type: 'TRANSACTIONS',
+          webhook_code: 'DEFAULT_UPDATE',
+          item_id: 'test-item-id',
+        },
+      } as Request;
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      // Mock the Plaid item that will be returned by Prisma
+      const mockPlaidItem = {
+        id: 'test-item-id',
+        itemId: 'test-item-id',
+        accessToken: 'test-access-token',
+        status: 'ACTIVE',
+        userId: 'test-user-id',
+      };
+
+      // Mock the Prisma client methods
+      mockPrisma.plaidItem.findFirst.mockResolvedValue(mockPlaidItem);
+      mockPrisma.plaidItem.update.mockResolvedValue({ ...mockPlaidItem, status: 'UPDATED' });
+
+      // Call the controller method
+      await PlaidWebhookController.handleWebhook(req, res, mockNext);
+
+      // Verify the Plaid item was looked up with the correct parameters
+      expect(mockPrisma.plaidItem.findFirst).toHaveBeenCalledWith({
+        where: { itemId: 'test-item-id' },
+        include: { user: true },
+      });
+
+      // Verify the response was sent with success
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        success: true,
+        data: expect.objectContaining({
+          message: expect.any(String)
+        })
+      }));
+
+      // Verify logger was called
+      expect(mockLogger.info).toHaveBeenCalledWith(
+        expect.stringContaining('Processing DEFAULT_UPDATE webhook'),
+        expect.objectContaining({
+          itemId: 'test-item-id',
+          userId: 'test-user-id',
+          webhookCode: 'DEFAULT_UPDATE',
+        })
+      );
+    });
+
+    it('should handle missing webhook type', async () => {
+      // Mock request with missing webhook type
+      const req = {
+        body: {
+          // Missing webhook_type
+          webhook_code: 'DEFAULT_UPDATE',
+          item_id: 'test-item-id',
+        },
+      } as Request;
+
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn(),
+      } as unknown as Response;
+
+      // Call the controller method
+      await PlaidWebhookController.handleWebhook(req, res, mockNext);
+
+      // Verify the error was handled correctly
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+        success: false,
+        error: expect.objectContaining({
+          message: 'Missing webhook_type in request body',
+        })
+      }));
+    });
+  });
+
+  describe('handleTransactionsWebhook', () => {
+    it('should update the Plaid item status when webhook is processed', async () => {
+      // This would test the private method indirectly through the handleWebhook method
+      // or you could test it directly if you export it for testing
+    });
+  });
+      status: 'ACTIVE',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    
+    // Mock the encryption service
+    (encryptionService.decrypt as jest.Mock) = jest.fn().mockImplementation((data: string) => {
+      if (data === testPlaidItem.accessToken) {
+        return 'test-access-token';
+      }
+      return data;
+    });
+  });
+
+  afterAll(async () => {
+    // Close the server
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+    // No need to disconnect from Prisma in tests with mocks
+  });
+
+  afterEach(() => {
+    // Clear all mocks after each test
+    jest.clearAllMocks();
+  });
+
+  describe('handleWebhook', () => {
+    it('should process a valid webhook request', async () => {
+      // Setup test data
+      const req = {
+        body: {
+          webhook_type: 'TRANSACTIONS',
+          webhook_code: 'DEFAULT_UPDATE',
+          item_id: 'test-item-id',
+          new_transactions: 0,
+          removed_transactions: []
+        },
+        id: 'test-request-id',
+        headers: {},
+        method: 'POST',
+        url: '/api/plaid/webhook',
+        params: {},
+        query: {},
+        get: jest.fn(),
+        header: jest.fn(),
+        accepts: jest.fn(),
+      } as unknown as Request;
+      
+      const res = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockReturnThis(),
+        send: jest.fn().mockReturnThis(),
+        sendStatus: jest.fn().mockReturnThis(),
+        locals: {},
+      } as unknown as Response;
+      
+      const next = jest.fn();
+      
+      // Mock the Prisma response for the Plaid item
+      const mockPlaidItem = {
+        id: 'test-id',
+        itemId: 'test-item-id',
+        accessToken: 'test-access-token',
+        userId: 'test-user-id',
+        status: 'ACTIVE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        user: {
+          id: 'test-user-id',
+          email: 'test@example.com',
+          name: 'Test User'
+        }
+      };
+
+      // Mock the Prisma client methods
+      mockPrisma.plaidItem.findFirst.mockResolvedValue(mockPlaidItem);
+
+      // Mock the logger
+      const mockLogger = {
+        info: jest.fn(),
+        error: jest.fn(),
+        warn: jest.fn(),
+      };
+
+      jest.mock('../../src/utils/logger', () => ({
+        logger: mockLogger,
+      }));
+      
+      // Import the controller after setting up the mocks
+      const { PlaidWebhookController } = require('../../src/controllers/plaid-webhook.controller');
+
+      // Call the controller method directly
+      await PlaidWebhookController.handleWebhook(req, res, next);
+      
+      // Verify the Plaid item was looked up with the correct parameters
+      expect(mockPrisma.plaidItem.findFirst).toHaveBeenCalledWith({
+        where: { itemId: 'test-item-id' },
+        body: {},
+        headers: expect.any(Object),
+      });
+    }, 10000); // Increase timeout for this test
+  });
+
+  describe('Error Handling', () => {
+    it('should log and handle unexpected errors', async () => {
+      // Arrange
+      const webhookPayload = generateWebhookPayload('ITEM', 'WEBHOOK_UPDATE_ACKNOWLEDGED', 'test-item-id');
+      const error = new Error('Unexpected error');
+      
+      // Simulate an unexpected error in the webhook handler
+      mockHandleWebhook.mockRejectedValueOnce(error);
+      
+      // Act
+      const response = await request(server)
+        .post('/api/plaid/webhook')
+        .send(webhookPayload)
+        .expect(500);
+
+      // Assert
+      expect(response.body).toMatchObject({
+        status: 'error',
+        message: 'An error occurred while processing the webhook',
+      });
+      
+      // Verify the error was logged correctly
+      expect(mockLogger.error).toHaveBeenCalledWith(
+        'Error processing webhook:',
+        { error, webhookType: 'ITEM' },
+        expect.any(Function)
+      );
+    }, 10000); // Increase timeout for this test
+  });
+});

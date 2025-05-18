@@ -1,0 +1,147 @@
+# Task ID: 11
+# Title: Transaction Management UI
+# Status: pending
+# Dependencies: 1, 2, 3, 7, 8, 16, 17, 18, 19
+# Priority: medium
+# Description: Build the frontend interface for viewing, searching, and editing transactions.
+# Details:
+1. Create transaction list component with pagination
+2. Implement transaction search and filtering
+3. Build transaction detail view
+4. Create inline transaction editing
+5. Implement category selection dropdown
+6. Add recurring flag toggle
+7. Build transaction notes editor
+
+Example transaction list component:
+```jsx
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
+import TransactionItem from './TransactionItem';
+import Pagination from './Pagination';
+
+function TransactionList() {
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 50,
+    total: 0,
+    pages: 0
+  });
+  const [filters, setFilters] = useState({
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
+    category: '',
+    search: ''
+  });
+  
+  useEffect(() => {
+    fetchTransactions();
+  }, [pagination.page, filters]);
+  
+  async function fetchTransactions() {
+    setLoading(true);
+    try {
+      const response = await api.get('/transactions', {
+        params: {
+          page: pagination.page,
+          limit: pagination.limit,
+          ...filters
+        }
+      });
+      setTransactions(response.data.transactions);
+      setPagination(response.data.pagination);
+    } catch (error) {
+      console.error('Failed to fetch transactions', error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  
+  async function handleUpdateTransaction(id, updates) {
+    try {
+      await api.patch(`/transactions/${id}`, updates);
+      setTransactions(transactions.map(t => 
+        t.id === id ? { ...t, ...updates } : t
+      ));
+    } catch (error) {
+      console.error('Failed to update transaction', error);
+    }
+  }
+  
+  function handleFilterChange(e) {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page
+  }
+  
+  return (
+    <div className="transactions-container">
+      <div className="filters">
+        <input
+          type="date"
+          name="startDate"
+          value={filters.startDate}
+          onChange={handleFilterChange}
+        />
+        <input
+          type="date"
+          name="endDate"
+          value={filters.endDate}
+          onChange={handleFilterChange}
+        />
+        <select name="category" value={filters.category} onChange={handleFilterChange}>
+          <option value="">All Categories</option>
+          {/* Category options */}
+        </select>
+        <input
+          type="text"
+          name="search"
+          value={filters.search}
+          onChange={handleFilterChange}
+          placeholder="Search transactions..."
+        />
+      </div>
+      
+      {loading ? (
+        <div>Loading transactions...</div>
+      ) : (
+        <>
+          <div className="transaction-list">
+            {transactions.length === 0 ? (
+              <div>No transactions found</div>
+            ) : (
+              transactions.map(transaction => (
+                <TransactionItem
+                  key={transaction.id}
+                  transaction={transaction}
+                  onUpdate={updates => handleUpdateTransaction(transaction.id, updates)}
+                />
+              ))
+            )}
+          </div>
+          
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={pagination.pages}
+            onPageChange={page => setPagination(prev => ({ ...prev, page }))}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+# Test Strategy:
+1. Unit tests for transaction components
+2. Test transaction editing functionality
+3. Test search and filtering
+4. Test pagination
+5. Test loading and empty states
+6. Test form validation for transaction edits
+7. Test responsive design for mobile view

@@ -1,0 +1,770 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Setup Project Repository and Infrastructure",
+      "description": "Initialize the project repository with necessary configuration files, folder structure, and development environment setup.",
+      "status": "done",
+      "dependencies": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Create a new Git repository\n2. Set up folder structure (frontend, backend, docs)\n3. Initialize package.json for both frontend and backend\n4. Configure ESLint, Prettier for code quality\n5. Set up environment variables (.env) structure\n6. Create README with setup instructions\n7. Configure HTTPS for local development\n8. Set up CI/CD pipeline (if applicable)\n\nFrontend structure:\n- React project using Create React App or Next.js\n- Set up routing structure\n- Configure styling framework based on UI Style Guide (Task 16)\n- Implement component structure aligned with Component Library (Task 17)\n- Ensure layout supports designs from Wireframes (Task 18) and Clickable Prototype (Task 19)\n\nBackend structure:\n- Node.js + Express setup\n- API routes folder structure\n- Middleware configuration",
+      "testStrategy": "1. Verify all scripts run without errors\n2. Ensure development environment can be set up with minimal steps\n3. Confirm HTTPS works locally\n4. Validate ESLint and Prettier configurations\n5. Verify frontend structure supports implementation of approved designs",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Configure HTTPS for Development Environment",
+          "description": "Set up HTTPS for local development to ensure secure communication between frontend and backend services.",
+          "dependencies": [],
+          "details": "Generate self-signed SSL certificates, update Express server configuration to use HTTPS, configure React development server to accept HTTPS connections, document the process for team members to trust the local certificates.",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Implement Frontend Routing Structure",
+          "description": "Set up React Router with the planned application routes and navigation components.",
+          "dependencies": [
+            1
+          ],
+          "details": "Install React Router, create route configuration for all planned pages, implement protected routes for authenticated users, create navigation components (header, sidebar, breadcrumbs), set up 404 and error pages.",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Integrate Styling Framework",
+          "description": "Select and integrate a styling framework/library for consistent UI development.",
+          "dependencies": [
+            2
+          ],
+          "details": "Choose between options like Tailwind CSS, Material UI, or Styled Components, set up the chosen framework with proper configuration, create theme files with brand colors and typography, implement responsive layout templates, document styling guidelines for the team.",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "Establish Component Structure and Architecture",
+          "description": "Define the component hierarchy and folder structure for the frontend application.",
+          "dependencies": [
+            3
+          ],
+          "details": "Create folders for components, pages, hooks, contexts, and utilities, implement atomic design principles (atoms, molecules, organisms), set up shared component library, create documentation for component usage, implement state management approach.",
+          "status": "done"
+        },
+        {
+          "id": 5,
+          "title": "Configure CI/CD Pipeline",
+          "description": "Set up continuous integration and deployment workflows for the project.",
+          "dependencies": [
+            4
+          ],
+          "details": "Configure GitHub Actions or similar CI/CD tool, set up linting and testing in the pipeline, implement automated build process, configure deployment to staging environment, set up notifications for build failures, document the release process.\n<info added on 2025-05-15T02:20:23.506Z>\nConfigure GitHub Actions or similar CI/CD tool, set up linting and testing in the pipeline, implement automated build process, configure deployment to staging environment, set up notifications for build failures, document the release process.\n\nThe CI/CD pipeline has been configured with GitHub Actions for both frontend and backend components. The frontend workflow includes linting, testing, building, and deployment to the staging environment. The backend workflow handles database setup, migrations, testing, and staging deployment.\n\nDependabot has been set up for automated dependency management with weekly updates for npm packages in both frontend and backend, grouped updates for development and production dependencies, and automated updates for GitHub Actions workflows.\n\nDeployment configurations have been prepared with commented examples for AWS S3 and Heroku deployment options. Environment configurations for the staging environment have also been added.\n\nRemaining tasks include:\n1. Configuring the actual deployment providers (AWS/Heroku)\n2. Setting up required secrets in the GitHub repository\n3. Configuring notifications for build failures\n4. Testing the complete pipeline with a sample deployment\n</info added on 2025-05-15T02:20:23.506Z>\n<info added on 2025-05-15T02:28:15.481Z>\nThe CI/CD pipeline configuration has been progressing well with GitHub Actions. The initial Terraform configuration for AWS infrastructure has been created to support the deployment targets for our CI/CD pipeline.\n\nThe Terraform project structure has been established with environments and modules to support different deployment stages. For the frontend deployment, an S3 module has been configured with CloudFront distribution to serve static assets securely with HTTPS and custom domain support. An ACM certificate has been set up for SSL/TLS encryption.\n\nThe staging environment has been configured with an S3 backend for state management, integration with the frontend module, and environment-specific variables to support the CI/CD pipeline's deployment to staging.\n\nThe next infrastructure components that need to be created include:\n1. Backend module for ECS/Elastic Beanstalk to host the application services\n2. Database module for RDS to manage persistent data\n3. VPC and networking components for secure communication\n4. AWS Secrets Manager configuration for sensitive information\n\nOnce these infrastructure components are completed, the GitHub Actions workflows will need to be updated with the new infrastructure references to complete the CI/CD pipeline configuration. This will ensure that our automated deployments target the correct AWS resources.\n</info added on 2025-05-15T02:28:15.481Z>\n<info added on 2025-05-15T02:30:13.551Z>\nThe backend infrastructure configuration with Terraform has been successfully implemented to support our CI/CD pipeline. The following components have been created:\n\n1. ECS Fargate module with:\n   - ECS cluster and service configuration for containerized application deployment\n   - Task definition with container settings for resource allocation and environment variables\n   - Application Load Balancer with HTTPS support for secure traffic routing\n   - Security groups for ALB and ECS tasks with appropriate ingress/egress rules\n   - IAM roles for task execution and runtime with least privilege permissions\n   - CloudWatch log group for container logs to enable monitoring and troubleshooting\n\n2. The staging environment configuration has been updated with:\n   - Integration of the backend module with necessary variables for deployment\n   - Outputs for both frontend and backend resources to facilitate CI/CD integration\n   - Environment-specific settings to differentiate staging from other environments\n\nThe CI/CD pipeline is progressing well with the infrastructure components being built incrementally. The next steps in the infrastructure setup include:\n1. Creating a VPC module for networking infrastructure with proper subnets and routing\n2. Implementing an RDS module for database services with appropriate security measures\n3. Configuring AWS Secrets Manager for storing and retrieving sensitive data\n4. Updating GitHub Actions workflows to reference the newly created infrastructure\n5. Adding production environment configuration with appropriate safeguards\n\nOnce these remaining infrastructure components are completed, the GitHub Actions workflows will be updated to deploy to the correct AWS resources, completing the CI/CD pipeline configuration.\n</info added on 2025-05-15T02:30:13.551Z>",
+          "status": "done"
+        },
+        {
+          "id": 6,
+          "title": "Configure AWS Infrastructure with Terraform",
+          "description": "Set up AWS infrastructure using Terraform for frontend (S3 + CloudFront), backend (ECS/Elastic Beanstalk), and database (RDS).",
+          "details": "Create Terraform configurations for:\n1. S3 bucket for frontend static assets\n2. CloudFront distribution with SSL\n3. ECS cluster or Elastic Beanstalk environment\n4. RDS PostgreSQL instance\n5. VPC, security groups, and IAM roles\n6. AWS Secrets Manager for sensitive data\n\nInclude proper tagging, backup configurations, and security best practices.\n<info added on 2025-05-15T02:41:36.221Z>\nCreate Terraform configurations for:\n1. S3 bucket for frontend static assets\n2. CloudFront distribution with SSL\n3. ECS cluster or Elastic Beanstalk environment\n4. RDS PostgreSQL instance\n5. VPC, security groups, and IAM roles\n6. AWS Secrets Manager for sensitive data\n\nInclude proper tagging, backup configurations, and security best practices.\n\nAWS Secrets Manager Implementation:\n- Created a dedicated Terraform module (terraform/modules/secrets/) for centralized secrets management\n- Implemented secure storage for application secrets including JWT tokens and Stripe API keys\n- Configured IAM policies that grant ECS tasks least-privilege access to specific secrets\n- Integrated with RDS module to manage database credentials securely\n- Added CloudWatch audit logging to track and monitor all secrets access attempts\n- Implemented environment-specific secret management for dev/staging/production isolation\n- Applied security controls including encryption, access policies, and rotation settings\n- Set up proper handling of sensitive variables in Terraform to prevent exposure in state files\n- Updated staging environment configuration to use the new secrets management module\n\nThe implementation follows AWS security best practices with a focus on the principle of least privilege, encryption at rest, and comprehensive audit logging. The solution is designed to scale across multiple environments while maintaining strict security controls.\n</info added on 2025-05-15T02:41:36.221Z>",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 1
+        },
+        {
+          "id": 7,
+          "title": "Configure GitHub Repository Secrets and Environment Variables",
+          "description": "Set up all required secrets and environment variables in GitHub repository settings for both staging and production environments.",
+          "details": "1. Create staging and production environment configurations in GitHub\n2. Configure AWS credentials using OIDC for secure cloud access\n3. Set up database credentials and connection strings\n4. Add API keys and service credentials\n5. Configure environment-specific variables\n6. Document all required secrets and their purposes\n7. Implement secret rotation strategy where applicable\n<info added on 2025-05-15T02:43:52.815Z>\n1. Create staging and production environment configurations in GitHub\n2. Configure AWS credentials using OIDC for secure cloud access\n3. Set up database credentials and connection strings\n4. Add API keys and service credentials\n5. Configure environment-specific variables\n6. Document all required secrets and their purposes\n7. Implement secret rotation strategy where applicable\n\nImplementation details:\n\n1. Created GitHub Actions workflow file (.github/workflows/deploy.yml) that:\n   - Defines staging and production environments\n   - Configures AWS credentials using OIDC\n   - Sets up all required environment variables\n   - Handles both frontend and backend deployments\n   - Manages Terraform state and variables\n\n2. Created comprehensive documentation (docs/github-secrets.md) that:\n   - Lists all required secrets and their purposes\n   - Provides format and usage details for each secret\n   - Outlines secret rotation policies\n   - Documents security best practices\n   - Includes setup instructions\n\n3. Implemented secret rotation script (scripts/rotate-secrets.sh) that:\n   - Helps manage secret rotation\n   - Updates both AWS Secrets Manager and GitHub secrets\n   - Includes safety checks and confirmations\n   - Supports automatic generation of secure values\n   - Maintains synchronization between services\n\n4. Configured environment protection:\n   - Separate staging and production environments\n   - Required approvals for production deployments\n   - Branch protection rules\n   - Deployment restrictions\n\n5. Implemented secure secret handling:\n   - Used AWS Secrets Manager integration\n   - Configured least privilege access\n   - Set up audit logging\n   - Implemented secret rotation policies\n   - Protected sensitive data in logs\n\nThe implementation follows security best practices and provides a maintainable solution for managing sensitive data across environments.\n</info added on 2025-05-15T02:43:52.815Z>",
+          "status": "done",
+          "dependencies": [
+            "1.6"
+          ],
+          "parentTaskId": 1
+        },
+        {
+          "id": 8,
+          "title": "Implement Deployment Notifications and Monitoring",
+          "description": "Set up comprehensive deployment notifications via Slack and implement monitoring for deployment health.",
+          "details": "1. Configure Slack webhook integration for deployment notifications\n2. Set up status notifications for:\n   - Deployment start/completion\n   - Build failures\n   - Test failures\n   - Security vulnerabilities from Dependabot\n3. Implement deployment health checks\n4. Set up AWS CloudWatch alarms for:\n   - Application errors\n   - Performance metrics\n   - Cost thresholds\n5. Create dashboard for deployment metrics\n6. Document notification settings and monitoring configuration\n<info added on 2025-05-15T02:46:45.468Z>\n1. Configure Slack webhook integration for deployment notifications\n2. Set up status notifications for:\n   - Deployment start/completion\n   - Build failures\n   - Test failures\n   - Security vulnerabilities from Dependabot\n3. Implement deployment health checks\n4. Set up AWS CloudWatch alarms for:\n   - Application errors\n   - Performance metrics\n   - Cost thresholds\n5. Create dashboard for deployment metrics\n6. Document notification settings and monitoring configuration\n\nImplementation details:\n- Created Terraform monitoring module (terraform/modules/monitoring) that:\n  - Sets up SNS topics for deployment notifications and alerts\n  - Configures CloudWatch metric filters and alarms\n  - Integrates with AWS Chatbot for Slack notifications\n  - Implements email notifications via SNS\n  - Sets up monitoring for ECS services and ALB\n\n- Updated GitHub Actions workflow (.github/workflows/deploy.yml) to:\n  - Send deployment status notifications at each stage\n  - Report success/failure of each deployment step\n  - Handle both staging and production environments\n  - Include detailed error messages in notifications\n\n- Configured monitoring for:\n  - Deployment status and failures\n  - Application error rates\n  - CPU and memory utilization\n  - ALB health checks\n  - ECS service status\n\n- Integrated with Slack through AWS Chatbot for:\n  - Real-time deployment notifications\n  - Critical alerts and warnings\n  - Infrastructure status updates\n  - Error notifications\n\nThe implementation provides comprehensive monitoring and notification capabilities for both staging and production environments, ensuring the team is immediately aware of any deployment issues or infrastructure problems.\n</info added on 2025-05-15T02:46:45.468Z>",
+          "status": "done",
+          "dependencies": [
+            "1.7"
+          ],
+          "parentTaskId": 1
+        },
+        {
+          "id": 9,
+          "title": "Test and Validate Complete CI/CD Pipeline",
+          "description": "Perform comprehensive testing of the entire CI/CD pipeline with sample deployments to staging environment.",
+          "details": "1. Create test deployment checklist\n2. Perform test deployments to verify:\n   - Frontend deployment to S3/CloudFront\n   - Backend deployment to ECS/Elastic Beanstalk\n   - Database migrations\n   - Environment variable handling\n   - Secrets management\n   - Rollback procedures\n3. Test notification systems\n4. Verify monitoring and alerts\n5. Document deployment process\n6. Create troubleshooting guide\n7. Train team on deployment procedures",
+          "status": "done",
+          "dependencies": [
+            "1.8"
+          ],
+          "parentTaskId": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Database Schema Design and Implementation",
+      "description": "Design and implement the database schema with proper user data isolation and encryption capabilities.",
+      "status": "done",
+      "dependencies": [
+        1,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Set up PostgreSQL database with Prisma ORM\n2. Design schema with the following tables:\n   - Users (id, email, password_hash, created_at, updated_at)\n   - BankConnections (id, user_id, plaid_access_token [encrypted], institution_name, last_sync_at)\n   - Transactions (id, user_id, bank_connection_id, amount, date, description, category, is_recurring, notes, merchant, created_at, updated_at)\n   - RecurringTransactions (id, user_id, name, amount, frequency, last_detected_at)\n   - FinancialAccounts (id, user_id, name, type, balance, etc.)\n   - Budgets (id, user_id, category, amount, period, etc.)\n   - FinancialGoals (id, user_id, name, target_amount, current_amount, target_date, etc.)\n   - Reports (id, user_id, type, parameters, etc.)\n   - Notifications (id, user_id, type, message, read_status, etc.)\n   - Attachments (id, user_id, transaction_id, file_path, etc.)\n   - Tags (id, user_id, name, etc.)\n\n3. Implement data encryption for sensitive fields\n4. Set up database migrations\n5. Create database access layer through Prisma client\n6. Implement strict user data isolation through database queries\n7. Add proper relationships and indexes for performance optimization\n8. Implement enum types for various fields (transaction categories, account types, etc.)\n9. Create database initialization script\n10. Add seed script for default categories\n11. Set up TypeScript configuration\n12. Add necessary development dependencies\n\nEncryption implementation:\nThe encryption implementation is now complete with the following components:\n\n1. **Encryption Service** (`src/utils/encryption.ts`):\n   - AES-256-GCM encryption with a 32-byte key derived from a secret\n   - IV (Initialization Vector) and authentication tag for each encryption\n   - TypeScript types for encrypted fields\n   - Helper methods for encryption/decryption and checking if a string is encrypted\n\n2. **Prisma Middleware** (`src/middleware/encryption.middleware.ts`):\n   - Automatic encryption of sensitive fields before database writes\n   - Automatic decryption of fields after database reads\n   - Configuration for encrypted fields per model\n   - Support for nested objects and arrays\n\n3. **Encrypted Fields Configuration**:\n   - User: resetToken, verificationCode\n   - Transaction: description, category, notes\n   - PlaidItem: accessToken, error\n\n4. **Prisma Integration** (`src/lib/prisma.ts`):\n   - Middleware applied to the Prisma client\n   - Type-safe encrypted fields\n   - Development logging for debugging",
+      "testStrategy": "1. Unit tests for database models and Prisma repositories\n2. Test data isolation between users\n3. Verify encryption/decryption functions\n4. Performance testing for common queries with indexes\n5. Test database migrations\n6. Verify seed data for default categories\n7. Test relationships between entities\n8. Validate TypeScript types against schema\n9. Test encryption middleware with various data types\n10. Verify automatic encryption/decryption of configured fields\n11. Test error handling for encryption/decryption operations",
+      "subtasks": [
+        {
+          "id": 2.1,
+          "title": "Set up Prisma ORM with PostgreSQL",
+          "status": "done",
+          "description": "Install and configure Prisma ORM to work with PostgreSQL database."
+        },
+        {
+          "id": 2.2,
+          "title": "Create comprehensive database schema",
+          "status": "done",
+          "description": "Design and implement database models for users, financial accounts, transactions, budgets, goals, recurring transactions, reports, notifications, attachments, and tags."
+        },
+        {
+          "id": 2.3,
+          "title": "Add relationships and indexes",
+          "status": "done",
+          "description": "Implement proper relationships between entities and add appropriate indexes for performance optimization."
+        },
+        {
+          "id": 2.4,
+          "title": "Implement enum types",
+          "status": "done",
+          "description": "Create enum types for various fields like transaction categories, account types, etc."
+        },
+        {
+          "id": 2.5,
+          "title": "Create database initialization script",
+          "status": "done",
+          "description": "Develop script to initialize the database with the required schema."
+        },
+        {
+          "id": 2.6,
+          "title": "Add seed script for default categories",
+          "status": "done",
+          "description": "Create seed script to populate default transaction categories and other reference data."
+        },
+        {
+          "id": 2.7,
+          "title": "Set up TypeScript configuration",
+          "status": "done",
+          "description": "Configure TypeScript to work with Prisma and ensure type safety."
+        },
+        {
+          "id": 2.8,
+          "title": "Add development dependencies",
+          "status": "done",
+          "description": "Install necessary development dependencies for database management and testing."
+        },
+        {
+          "id": 2.9,
+          "title": "Implement data encryption for sensitive fields",
+          "status": "done",
+          "description": "Implement encryption/decryption utilities for sensitive data like access tokens and financial information."
+        },
+        {
+          "id": 2.11,
+          "title": "Create database tests",
+          "status": "done",
+          "description": "Develop comprehensive tests for database models, relationships, and queries."
+        },
+        {
+          "id": 2.12,
+          "title": "Test encryption middleware",
+          "status": "done",
+          "description": "Create tests to verify the encryption middleware works correctly with various data types and handles errors appropriately."
+        },
+        {
+          "id": 2.13,
+          "title": "Document encryption implementation",
+          "status": "done",
+          "description": "Create documentation for the encryption service, middleware, and configuration for future reference and onboarding."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "User Authentication System",
+      "description": "Implement secure user registration, login, password reset, and JWT session management.",
+      "status": "done",
+      "dependencies": [
+        1,
+        2,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Create user registration endpoint\n   - Validate email format\n   - Hash passwords with bcrypt\n   - Store user in database\n\n2. Implement login endpoint\n   - Verify credentials\n   - Generate JWT token\n   - Set secure HTTP-only cookies\n\n3. Create password reset flow\n   - Generate reset tokens\n   - Send reset emails\n   - Token verification and password update\n\n4. Implement authentication middleware\n   - Verify JWT tokens\n   - Extract user information\n   - Protect routes\n\n5. Create account deletion endpoint\n   - Verify user credentials\n   - Delete all user data\n   - Revoke sessions\n\nExample JWT implementation:\n```javascript\nconst jwt = require('jsonwebtoken');\n\nfunction generateToken(user) {\n  return jwt.sign(\n    { id: user.id, email: user.email },\n    process.env.JWT_SECRET,\n    { expiresIn: '7d' }\n  );\n}\n\nfunction verifyToken(token) {\n  try {\n    return jwt.verify(token, process.env.JWT_SECRET);\n  } catch (error) {\n    return null;\n  }\n}\n```",
+      "testStrategy": "1. Unit tests for authentication functions\n2. Integration tests for registration, login, and password reset flows\n3. Test JWT token generation and verification\n4. Security testing for password hashing\n5. Test account deletion and data removal\n6. Test authentication middleware with valid and invalid tokens",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement User Registration Flow",
+          "description": "Create a secure user registration system that collects and validates user information before storing it in the database.",
+          "dependencies": [],
+          "details": "Requirements:\n- Create registration endpoint that accepts email, password, name\n- Implement password strength validation (min 8 chars, special chars, numbers)\n- Hash passwords using bcrypt before storage\n- Validate email format and uniqueness in database\n- Implement rate limiting to prevent brute force attacks\n- Add email verification flow with temporary tokens\n- Testing criteria: Verify successful registration, duplicate email handling, password validation, and proper data storage in Prisma",
+          "status": "done"
+        },
+        {
+          "id": 2,
+          "title": "Develop Login Authentication with JWT",
+          "description": "Build a secure login system using JWT tokens for maintaining authenticated sessions.",
+          "dependencies": [
+            1
+          ],
+          "details": "Requirements:\n- Create login endpoint accepting email/password\n- Verify credentials against hashed passwords in database\n- Generate JWT with appropriate expiration time and claims\n- Implement refresh token mechanism for extended sessions\n- Add device tracking for login history\n- Implement account lockout after failed attempts\n- Testing criteria: Verify successful login, invalid credential handling, JWT validation, and refresh token functionality",
+          "status": "done"
+        },
+        {
+          "id": 3,
+          "title": "Create Password Reset Functionality",
+          "description": "Implement a secure password reset flow allowing users to safely recover account access.",
+          "dependencies": [
+            2
+          ],
+          "details": "Requirements:\n- Create password reset request endpoint\n- Generate time-limited reset tokens stored securely\n- Send reset instructions via email with secure links\n- Implement token verification endpoint\n- Create password update endpoint with validation\n- Invalidate all active sessions on password change\n- Testing criteria: Verify token generation, expiration handling, email delivery, and successful password updates",
+          "status": "done"
+        },
+        {
+          "id": 4,
+          "title": "Build Authentication Middleware",
+          "description": "Develop middleware to protect routes and verify user authentication across the application.",
+          "dependencies": [
+            2
+          ],
+          "details": "Requirements:\n- Create middleware to validate JWT on protected routes\n- Implement role-based access control\n- Handle token expiration gracefully\n- Add request logging for security auditing\n- Implement CSRF protection\n- Create middleware for optional authentication\n- Testing criteria: Verify route protection, proper error responses for unauthorized access, and correct user context propagation",
+          "status": "done"
+        },
+        {
+          "id": 5,
+          "title": "Implement Account Deletion Flow",
+          "description": "Create a secure process for users to delete their accounts and associated data.",
+          "dependencies": [
+            1,
+            2,
+            4
+          ],
+          "details": "Requirements:\n- Create account deletion endpoint with re-authentication\n- Implement cascading deletion in Prisma schema\n- Add data anonymization for compliance with privacy regulations\n- Create soft-delete option with recovery period\n- Send confirmation emails for deletion requests\n- Implement admin override for account recovery\n- Testing criteria: Verify proper data removal, handling of related records, and confirmation processes",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Plaid Integration for Bank Account Connection",
+      "description": "Implement Plaid API integration to connect user bank accounts and fetch transaction data.",
+      "status": "done",
+      "dependencies": [
+        1,
+        2,
+        3,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Set up Plaid client with development credentials\n2. Implement Link token generation endpoint\n3. Create exchange public token endpoint to get access token\n4. Store encrypted access tokens in database\n5. Implement transaction fetching from Plaid API\n6. Set up daily sync process for new transactions\n7. Handle Plaid webhook events (if applicable)\n\nExample Plaid integration:\n```javascript\nconst { Configuration, PlaidApi, PlaidEnvironments } = require('plaid');\n\nconst configuration = new Configuration({\n  basePath: PlaidEnvironments.sandbox,\n  baseOptions: {\n    headers: {\n      'PLAID-CLIENT-ID': process.env.PLAID_CLIENT_ID,\n      'PLAID-SECRET': process.env.PLAID_SECRET,\n    },\n  },\n});\n\nconst plaidClient = new PlaidApi(configuration);\n\nasync function createLinkToken(userId) {\n  const response = await plaidClient.linkTokenCreate({\n    user: { client_user_id: userId.toString() },\n    client_name: 'LedgerLY',\n    products: ['transactions'],\n    country_codes: ['US'],\n    language: 'en',\n  });\n  return response.data.link_token;\n}\n\nasync function exchangePublicToken(publicToken) {\n  const response = await plaidClient.itemPublicTokenExchange({\n    public_token: publicToken,\n  });\n  return response.data.access_token;\n}\n\nasync function fetchTransactions(accessToken, startDate, endDate) {\n  const response = await plaidClient.transactionsGet({\n    access_token: accessToken,\n    start_date: startDate,\n    end_date: endDate,\n  });\n  return response.data.transactions;\n}\n```",
+      "testStrategy": "1. Unit tests for Plaid API wrapper functions\n2. Integration tests with Plaid sandbox environment\n3. Test token exchange flow\n4. Test transaction fetching and processing\n5. Test error handling for API failures\n6. Verify proper encryption of access tokens",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Set up Plaid client and configuration",
+          "description": "Configure the Plaid client with environment variables and create a service wrapper for Plaid API calls",
+          "details": "",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 4
+        },
+        {
+          "id": 2,
+          "title": "Implement Link token generation endpoint",
+          "description": "Create an API endpoint that generates and returns a Link token for the Plaid Link component",
+          "details": "",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 4
+        },
+        {
+          "id": 3,
+          "title": "Create exchange public token endpoint",
+          "description": "Implement an endpoint to exchange a public token for an access token and store it securely",
+          "details": "",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 4
+        },
+        {
+          "id": 4,
+          "title": "Implement transaction fetching service",
+          "description": "Create a service to fetch transactions from Plaid using the stored access tokens",
+          "details": "",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 4
+        },
+        {
+          "id": 5,
+          "title": "Set up transaction sync scheduler",
+          "description": "Create a scheduled job to periodically sync transactions from linked accounts",
+          "details": "",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 4
+        },
+        {
+          "id": 6,
+          "title": "Implement error handling and webhook support",
+          "description": "Add error handling for Plaid API calls and implement webhook handling for transaction updates",
+          "details": "",
+          "status": "done",
+          "dependencies": [],
+          "parentTaskId": 4
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Transaction Data Processing and Storage",
+      "description": "Process and store transaction data from Plaid, including categorization and recurring transaction detection.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "medium",
+      "details": "1. Create transaction processing service\n2. Implement transaction deduplication logic\n3. Store transactions in database with user_id association\n4. Auto-categorize transactions as income or expense based on amount\n5. Implement recurring transaction detection algorithm\n   - Group similar transactions by amount and merchant\n   - Analyze transaction frequency patterns\n   - Flag transactions as recurring based on pattern detection\n\nRecurring transaction detection algorithm:\n```javascript\nfunction detectRecurringTransactions(transactions, userId) {\n  // Group transactions by merchant and similar amounts (within 5% variance)\n  const groups = {};\n  \n  transactions.forEach(transaction => {\n    const key = `${transaction.merchant_name}-${Math.round(transaction.amount)}`;  \n    if (!groups[key]) groups[key] = [];\n    groups[key].push(transaction);\n  });\n  \n  const recurringCandidates = [];\n  \n  // Analyze each group for recurring patterns\n  Object.entries(groups).forEach(([key, txns]) => {\n    if (txns.length < 2) return; // Need at least 2 transactions to detect pattern\n    \n    // Sort by date\n    txns.sort((a, b) => new Date(a.date) - new Date(b.date));\n    \n    // Calculate days between transactions\n    const intervals = [];\n    for (let i = 1; i < txns.length; i++) {\n      const daysDiff = Math.round(\n        (new Date(txns[i].date) - new Date(txns[i-1].date)) / (1000 * 60 * 60 * 24)\n      );\n      intervals.push(daysDiff);\n    }\n    \n    // Check if intervals are consistent (within 3 days variance)\n    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length;\n    const isConsistent = intervals.every(interval => Math.abs(interval - avgInterval) <= 3);\n    \n    if (isConsistent && avgInterval <= 35) { // Monthly or more frequent\n      recurringCandidates.push({\n        userId,\n        name: txns[0].merchant_name,\n        amount: txns[0].amount,\n        frequency: determineFrequency(avgInterval),\n        transactions: txns.map(t => t.id)\n      });\n    }\n  });\n  \n  return recurringCandidates;\n}\n\nfunction determineFrequency(avgDays) {\n  if (avgDays <= 7.5) return 'weekly';\n  if (avgDays <= 15) return 'biweekly';\n  return 'monthly';\n}\n```\n\n6. Integrate with CI/CD pipeline for automated testing and deployment\n   - Ensure transaction processing service is included in backend workflow\n   - Add database migration scripts for transaction tables\n   - Configure environment variables for different environments (dev, staging, prod)",
+      "testStrategy": "1. Unit tests for transaction processing functions\n2. Test recurring transaction detection with various patterns\n3. Test deduplication logic\n4. Integration tests with sample Plaid data\n5. Performance testing with large transaction sets\n6. Verify user data isolation in transaction storage\n7. CI/CD pipeline tests:\n   - Automated testing in GitHub Actions workflow\n   - Database migration tests for transaction tables\n   - Environment-specific configuration tests (staging vs production)",
+      "subtasks": [
+        {
+          "id": 5.1,
+          "title": "Integrate transaction processing with CI/CD pipeline",
+          "description": "Update transaction processing service to work with the newly created CI/CD pipeline",
+          "status": "pending"
+        },
+        {
+          "id": 5.2,
+          "title": "Create database migration scripts for transaction tables",
+          "description": "Develop migration scripts for transaction tables that can be run automatically in the CI/CD pipeline",
+          "status": "pending"
+        },
+        {
+          "id": 5.3,
+          "title": "Configure environment-specific settings for transaction processing",
+          "description": "Set up configuration for transaction processing service across dev, staging, and production environments",
+          "status": "pending"
+        },
+        {
+          "id": 5.4,
+          "title": "Add transaction service tests to GitHub Actions workflow",
+          "description": "Ensure transaction processing tests are included in the backend testing workflow",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Dashboard Analytics Backend",
+      "description": "Implement backend APIs to provide analytics data for the dashboard, including cash flow, recurring transactions, and category breakdowns, with secure access to sensitive data using AWS Secrets Manager.",
+      "status": "done",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "medium",
+      "details": "1. Create analytics service with the following endpoints:\n   - Monthly cash flow (income vs. expenses)\n   - Net cash trend over time\n   - Recurring transactions list\n   - Expense breakdown by category\n   - Expense breakdown by merchant\n\n2. Implement data aggregation functions\n3. Optimize queries for performance\n4. Ensure proper date range filtering\n5. Add caching for frequently accessed analytics\n6. Integrate with AWS Secrets Manager for secure access to:\n   - Database credentials\n   - API keys for third-party services\n   - JWT signing keys\n\nExample analytics service:\n```javascript\nasync function getMonthlyCashFlow(userId, startDate, endDate) {\n  // Get database credentials from AWS Secrets Manager\n  const dbCredentials = await secretsManager.getSecret('database/credentials');\n  \n  const months = getMonthsBetweenDates(startDate, endDate);\n  const result = [];\n  \n  for (const month of months) {\n    const { startOfMonth, endOfMonth } = getMonthBoundaries(month);\n    \n    const transactions = await transactionRepository.findByUserIdAndDateRange(\n      userId, startOfMonth, endOfMonth\n    );\n    \n    const income = transactions\n      .filter(t => t.amount > 0)\n      .reduce((sum, t) => sum + t.amount, 0);\n      \n    const expenses = transactions\n      .filter(t => t.amount < 0)\n      .reduce((sum, t) => sum + Math.abs(t.amount), 0);\n    \n    result.push({\n      month: formatMonth(month),\n      income,\n      expenses,\n      net: income - expenses\n    });\n  }\n  \n  return result;\n}\n\nasync function getExpensesByCategory(userId, startDate, endDate) {\n  const transactions = await transactionRepository.findByUserIdAndDateRange(\n    userId, startDate, endDate\n  );\n  \n  const expensesByCategory = {};\n  \n  transactions\n    .filter(t => t.amount < 0)\n    .forEach(t => {\n      const category = t.category || 'Uncategorized';\n      if (!expensesByCategory[category]) expensesByCategory[category] = 0;\n      expensesByCategory[category] += Math.abs(t.amount);\n    });\n  \n  return Object.entries(expensesByCategory).map(([category, amount]) => ({\n    category,\n    amount\n  }));\n}\n```",
+      "testStrategy": "1. Unit tests for analytics calculation functions\n2. Integration tests with sample transaction data\n3. Performance testing with large datasets\n4. Test date range filtering\n5. Verify data isolation between users\n6. Test edge cases (no transactions, single transaction)\n7. Test AWS Secrets Manager integration:\n   - Verify secure retrieval of database credentials\n   - Test fallback mechanisms if secrets access fails\n   - Validate proper IAM role configuration\n   - Ensure secrets are not exposed in logs or responses\n8. Verify CloudWatch audit logging for secrets access",
+      "subtasks": [
+        {
+          "id": "6.1",
+          "title": "Integrate AWS Secrets Manager for sensitive data",
+          "description": "Implement secure access to database credentials, API keys, and JWT signing keys using AWS Secrets Manager",
+          "status": "done"
+        },
+        {
+          "id": "6.2",
+          "title": "Configure IAM policies for analytics service",
+          "description": "Set up appropriate IAM policies for the analytics service to access required secrets",
+          "status": "done"
+        },
+        {
+          "id": "6.3",
+          "title": "Implement environment-specific secret handling",
+          "description": "Configure the analytics service to use different secrets based on the deployment environment (dev, staging, prod)",
+          "status": "done"
+        },
+        {
+          "id": "6.4",
+          "title": "Add CloudWatch audit logging",
+          "description": "Implement CloudWatch logging for tracking secrets access and analytics API usage",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Transaction Management API",
+      "description": "Create APIs for users to view, edit, categorize, and manage their transactions.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "medium",
+      "details": "1. Implement transaction listing API with filtering and pagination\n2. Create transaction update endpoint for editing categories and notes\n3. Implement recurring flag toggle endpoint\n4. Add transaction search functionality\n5. Create transaction detail endpoint\n\nExample transaction controller:\n```javascript\n// GET /api/transactions\nasync function getTransactions(req, res) {\n  const userId = req.user.id;\n  const { page = 1, limit = 50, startDate, endDate, category, search } = req.query;\n  \n  const transactions = await transactionService.findTransactions({\n    userId,\n    page: parseInt(page),\n    limit: parseInt(limit),\n    startDate,\n    endDate,\n    category,\n    search\n  });\n  \n  const total = await transactionService.countTransactions({\n    userId,\n    startDate,\n    endDate,\n    category,\n    search\n  });\n  \n  res.json({\n    transactions,\n    pagination: {\n      page: parseInt(page),\n      limit: parseInt(limit),\n      total,\n      pages: Math.ceil(total / parseInt(limit))\n    }\n  });\n}\n\n// PATCH /api/transactions/:id\nasync function updateTransaction(req, res) {\n  const userId = req.user.id;\n  const transactionId = req.params.id;\n  const { category, notes, isRecurring } = req.body;\n  \n  // Verify transaction belongs to user\n  const transaction = await transactionService.findById(transactionId);\n  if (!transaction || transaction.userId !== userId) {\n    return res.status(404).json({ error: 'Transaction not found' });\n  }\n  \n  const updatedTransaction = await transactionService.updateTransaction(\n    transactionId,\n    { category, notes, isRecurring }\n  );\n  \n  res.json(updatedTransaction);\n}\n```",
+      "testStrategy": "1. Unit tests for transaction service functions\n2. Integration tests for all API endpoints\n3. Test pagination and filtering\n4. Test transaction updates\n5. Verify user can only access their own transactions\n6. Test search functionality\n7. Performance testing with large transaction sets",
+      "subtasks": []
+    },
+    {
+      "id": 8,
+      "title": "Frontend Authentication and User Management",
+      "description": "Implement frontend components for user registration, login, password reset, and account management.",
+      "status": "in-progress",
+      "dependencies": [
+        1,
+        2,
+        3,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Create login page with email/password form\n2. Implement registration page\n3. Build password reset flow\n4. Create account settings page\n5. Implement JWT token storage and refresh\n6. Add authentication state management\n7. Create protected route wrapper\n\nExample authentication context:\n```jsx\nimport React, { createContext, useState, useEffect, useContext } from 'react';\nimport api from '../services/api';\n\nconst AuthContext = createContext();\n\nexport function AuthProvider({ children }) {\n  const [user, setUser] = useState(null);\n  const [loading, setLoading] = useState(true);\n  \n  useEffect(() => {\n    // Check if user is already logged in\n    async function loadUserFromToken() {\n      try {\n        const response = await api.get('/auth/me');\n        setUser(response.data);\n      } catch (error) {\n        console.error('Failed to load user', error);\n      } finally {\n        setLoading(false);\n      }\n    }\n    \n    loadUserFromToken();\n  }, []);\n  \n  async function login(email, password) {\n    const response = await api.post('/auth/login', { email, password });\n    setUser(response.data.user);\n    return response.data.user;\n  }\n  \n  async function register(email, password) {\n    const response = await api.post('/auth/register', { email, password });\n    setUser(response.data.user);\n    return response.data.user;\n  }\n  \n  async function logout() {\n    await api.post('/auth/logout');\n    setUser(null);\n  }\n  \n  async function resetPassword(token, newPassword) {\n    await api.post('/auth/reset-password', { token, newPassword });\n  }\n  \n  return (\n    <AuthContext.Provider value={{ \n      user, \n      loading, \n      login, \n      register, \n      logout, \n      resetPassword,\n      isAuthenticated: !!user\n    }}>\n      {children}\n    </AuthContext.Provider>\n  );\n}\n\nexport function useAuth() {\n  return useContext(AuthContext);\n}\n```",
+      "testStrategy": "1. Unit tests for authentication components\n2. Integration tests for login, registration, and password reset flows\n3. Test form validation\n4. Test authentication state management\n5. Test protected routes\n6. Test error handling for authentication failures\n7. Test token refresh mechanism",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Login Page",
+          "description": "Create a responsive login page with email/password fields, remember me option, and social login buttons.",
+          "dependencies": [],
+          "details": "UI Requirements: Clean, minimalist design with company branding; responsive layout for mobile and desktop. Form Validation: Email format validation, password minimum length check, error messages for invalid credentials. UX Considerations: Loading states during authentication, clear error messaging, keyboard navigation support, and auto-focus on email field.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Develop Registration Page",
+          "description": "Build a user registration form with fields for name, email, password, and terms acceptance.",
+          "dependencies": [
+            1
+          ],
+          "details": "UI Requirements: Multi-step form with progress indicator, password strength meter, terms and conditions checkbox. Form Validation: Email uniqueness check, password complexity requirements (uppercase, lowercase, numbers, special characters), matching password confirmation field. UX Considerations: Real-time validation feedback, clear next steps after registration, option to navigate back to login.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Create Password Reset Flow",
+          "description": "Implement forgot password functionality with email verification and password reset forms.",
+          "dependencies": [
+            1
+          ],
+          "details": "UI Requirements: Simple request form for email input, secure reset page with new password and confirmation fields. Form Validation: Email existence verification, secure token validation in URL, new password complexity requirements. UX Considerations: Clear instructions at each step, confirmation messages, expiration handling for reset links, and security notifications.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Build Account Settings Page",
+          "description": "Develop a comprehensive account settings page for profile management, password changes, and account preferences.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "UI Requirements: Tabbed interface for different settings categories, profile photo upload, form fields for personal information. Form Validation: Current password verification for sensitive changes, input format validation for phone/email, file type and size validation for uploads. UX Considerations: Unsaved changes warnings, success confirmations, accessible form controls, and responsive design for all device sizes.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Implement Authentication State Management",
+          "description": "Create a global authentication context to manage user session, protected routes, and token handling.",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "UI Requirements: Loading states during authentication checks, conditional rendering based on auth state, session timeout notifications. Technical Requirements: JWT storage and refresh mechanism, secure token handling, automatic redirection for unauthenticated users. UX Considerations: Seamless re-authentication, persistent login across page refreshes, clear session status indicators, and graceful handling of expired sessions.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Add Social Authentication Options",
+          "description": "Integrate OAuth authentication with popular providers like Google, Facebook, and Apple.",
+          "dependencies": [
+            1,
+            5
+          ],
+          "details": "UI Requirements: Branded social login buttons, consistent styling with main authentication forms, loading indicators during OAuth process. Technical Requirements: OAuth flow implementation, account linking capabilities, proper error handling for failed social logins. UX Considerations: Clear permissions explanation, streamlined registration for new social users, fallback options if social authentication fails.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Implement User Session Management",
+          "description": "Create functionality to handle user sessions including timeout, multiple devices, and session revocation.",
+          "dependencies": [
+            5
+          ],
+          "details": "UI Requirements: Active sessions list in account settings, session timeout warnings, logout confirmation dialogs. Technical Requirements: Session tracking across devices, secure session storage, automatic token refresh mechanism. UX Considerations: Clear session activity indicators, easy session termination options, notifications for suspicious login attempts, and remember device functionality.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Bank Connection Frontend Flow",
+      "description": "Implement the frontend flow for connecting bank accounts via Plaid Link.",
+      "status": "done",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        8,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Integrate Plaid Link SDK\n2. Create bank connection component\n3. Implement connection success/failure handling\n4. Build bank account management UI\n5. Show connection status and last sync time\n6. Ensure compatibility with CI/CD pipeline testing infrastructure\n7. Configure necessary environment variables using the template in scripts/env.template\n\nExample Plaid Link integration:\n```jsx\nimport React, { useCallback, useState } from 'react';\nimport { usePlaidLink } from 'react-plaid-link';\nimport api from '../services/api';\n\nfunction BankConnectionButton() {\n  const [loading, setLoading] = useState(false);\n  const [linkToken, setLinkToken] = useState(null);\n  \n  const generateLinkToken = async () => {\n    setLoading(true);\n    try {\n      const response = await api.post('/plaid/create-link-token');\n      setLinkToken(response.data.link_token);\n    } catch (error) {\n      console.error('Failed to generate link token', error);\n    } finally {\n      setLoading(false);\n    }\n  };\n  \n  const onSuccess = useCallback(async (publicToken, metadata) => {\n    try {\n      await api.post('/plaid/exchange-public-token', {\n        public_token: publicToken,\n        institution: metadata.institution,\n      });\n      // Refresh user's bank accounts\n      // Show success message\n    } catch (error) {\n      console.error('Failed to exchange token', error);\n      // Show error message\n    }\n  }, []);\n  \n  const { open, ready } = usePlaidLink({\n    token: linkToken,\n    onSuccess,\n    onExit: () => {\n      // Handle user exiting Plaid Link\n    },\n  });\n  \n  const handleClick = () => {\n    if (linkToken) {\n      open();\n    } else {\n      generateLinkToken();\n    }\n  };\n  \n  return (\n    <button \n      onClick={handleClick} \n      disabled={loading || (linkToken && !ready)}\n    >\n      {loading ? 'Loading...' : 'Connect Bank Account'}\n    </button>\n  );\n}\n```",
+      "testStrategy": "1. Unit tests for bank connection components\n2. Integration tests with Plaid sandbox\n3. Test success and error handling\n4. Test UI states (loading, success, error)\n5. Test bank account management interface\n6. Verify connection status display\n7. Integrate with test-pipeline.sh for CI/CD validation\n8. Implement comprehensive logging for frontend interactions\n9. Validate environment variables using the established template\n10. Test in both staging and production environments\n11. Ensure proper error reporting and logging for Plaid connection issues",
+      "subtasks": [
+        {
+          "id": 9.1,
+          "title": "Configure environment variables for Plaid integration",
+          "description": "Set up the necessary environment variables for Plaid integration using the template in scripts/env.template",
+          "status": "done"
+        },
+        {
+          "id": 9.2,
+          "title": "Implement logging for Plaid connection events",
+          "description": "Add timestamped logging for Plaid connection attempts, successes, and failures to align with the CI/CD pipeline testing requirements",
+          "status": "done"
+        },
+        {
+          "id": 9.3,
+          "title": "Add CI/CD pipeline test cases",
+          "description": "Create specific test cases for the Plaid integration to be included in the test-pipeline.sh script",
+          "status": "done"
+        },
+        {
+          "id": 9.4,
+          "title": "Document Plaid integration in pipeline documentation",
+          "description": "Update docs/pipeline-testing.md with specific information about testing the Plaid integration",
+          "status": "done"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Dashboard Analytics Visualization",
+      "description": "Implement frontend visualizations for financial analytics using charts and graphs.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        6,
+        8,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "medium",
+      "details": "1. Integrate charting library (e.g., Chart.js, Recharts)\n2. Create monthly cash flow chart (line/bar)\n3. Implement net cash trend visualization\n4. Build expense category breakdown chart (pie/bar)\n5. Create recurring transactions list component\n6. Implement date range selector for filtering\n\nExample chart component:\n```jsx\nimport React, { useState, useEffect } from 'react';\nimport { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';\nimport api from '../services/api';\n\nfunction CashFlowChart({ startDate, endDate }) {\n  const [data, setData] = useState([]);\n  const [loading, setLoading] = useState(true);\n  \n  useEffect(() => {\n    async function fetchCashFlowData() {\n      setLoading(true);\n      try {\n        const response = await api.get('/analytics/cash-flow', {\n          params: { startDate, endDate }\n        });\n        setData(response.data);\n      } catch (error) {\n        console.error('Failed to fetch cash flow data', error);\n      } finally {\n        setLoading(false);\n      }\n    }\n    \n    fetchCashFlowData();\n  }, [startDate, endDate]);\n  \n  if (loading) return <div>Loading chart data...</div>;\n  \n  return (\n    <div className=\"chart-container\">\n      <h3>Monthly Cash Flow</h3>\n      <ResponsiveContainer width=\"100%\" height={300}>\n        <BarChart data={data}>\n          <CartesianGrid strokeDasharray=\"3 3\" />\n          <XAxis dataKey=\"month\" />\n          <YAxis />\n          <Tooltip />\n          <Legend />\n          <Bar dataKey=\"income\" fill=\"#4CAF50\" name=\"Income\" />\n          <Bar dataKey=\"expenses\" fill=\"#F44336\" name=\"Expenses\" />\n        </BarChart>\n      </ResponsiveContainer>\n    </div>\n  );\n}\n```",
+      "testStrategy": "1. Unit tests for chart components\n2. Test data transformation for charts\n3. Test responsive behavior\n4. Test date range filtering\n5. Test loading and error states\n6. Visual regression testing for charts\n7. Test with various data scenarios (empty data, large datasets)",
+      "subtasks": []
+    },
+    {
+      "id": 11,
+      "title": "Transaction Management UI",
+      "description": "Build the frontend interface for viewing, searching, and editing transactions.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        7,
+        8,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "medium",
+      "details": "1. Create transaction list component with pagination\n2. Implement transaction search and filtering\n3. Build transaction detail view\n4. Create inline transaction editing\n5. Implement category selection dropdown\n6. Add recurring flag toggle\n7. Build transaction notes editor\n\nExample transaction list component:\n```jsx\nimport React, { useState, useEffect } from 'react';\nimport api from '../services/api';\nimport TransactionItem from './TransactionItem';\nimport Pagination from './Pagination';\n\nfunction TransactionList() {\n  const [transactions, setTransactions] = useState([]);\n  const [loading, setLoading] = useState(true);\n  const [pagination, setPagination] = useState({\n    page: 1,\n    limit: 50,\n    total: 0,\n    pages: 0\n  });\n  const [filters, setFilters] = useState({\n    startDate: new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0],\n    endDate: new Date().toISOString().split('T')[0],\n    category: '',\n    search: ''\n  });\n  \n  useEffect(() => {\n    fetchTransactions();\n  }, [pagination.page, filters]);\n  \n  async function fetchTransactions() {\n    setLoading(true);\n    try {\n      const response = await api.get('/transactions', {\n        params: {\n          page: pagination.page,\n          limit: pagination.limit,\n          ...filters\n        }\n      });\n      setTransactions(response.data.transactions);\n      setPagination(response.data.pagination);\n    } catch (error) {\n      console.error('Failed to fetch transactions', error);\n    } finally {\n      setLoading(false);\n    }\n  }\n  \n  async function handleUpdateTransaction(id, updates) {\n    try {\n      await api.patch(`/transactions/${id}`, updates);\n      setTransactions(transactions.map(t => \n        t.id === id ? { ...t, ...updates } : t\n      ));\n    } catch (error) {\n      console.error('Failed to update transaction', error);\n    }\n  }\n  \n  function handleFilterChange(e) {\n    const { name, value } = e.target;\n    setFilters(prev => ({\n      ...prev,\n      [name]: value\n    }));\n    setPagination(prev => ({ ...prev, page: 1 })); // Reset to first page\n  }\n  \n  return (\n    <div className=\"transactions-container\">\n      <div className=\"filters\">\n        <input\n          type=\"date\"\n          name=\"startDate\"\n          value={filters.startDate}\n          onChange={handleFilterChange}\n        />\n        <input\n          type=\"date\"\n          name=\"endDate\"\n          value={filters.endDate}\n          onChange={handleFilterChange}\n        />\n        <select name=\"category\" value={filters.category} onChange={handleFilterChange}>\n          <option value=\"\">All Categories</option>\n          {/* Category options */}\n        </select>\n        <input\n          type=\"text\"\n          name=\"search\"\n          value={filters.search}\n          onChange={handleFilterChange}\n          placeholder=\"Search transactions...\"\n        />\n      </div>\n      \n      {loading ? (\n        <div>Loading transactions...</div>\n      ) : (\n        <>\n          <div className=\"transaction-list\">\n            {transactions.length === 0 ? (\n              <div>No transactions found</div>\n            ) : (\n              transactions.map(transaction => (\n                <TransactionItem\n                  key={transaction.id}\n                  transaction={transaction}\n                  onUpdate={updates => handleUpdateTransaction(transaction.id, updates)}\n                />\n              ))\n            )}\n          </div>\n          \n          <Pagination\n            currentPage={pagination.page}\n            totalPages={pagination.pages}\n            onPageChange={page => setPagination(prev => ({ ...prev, page }))}\n          />\n        </>\n      )}\n    </div>\n  );\n}\n```",
+      "testStrategy": "1. Unit tests for transaction components\n2. Test transaction editing functionality\n3. Test search and filtering\n4. Test pagination\n5. Test loading and empty states\n6. Test form validation for transaction edits\n7. Test responsive design for mobile view",
+      "subtasks": []
+    },
+    {
+      "id": 12,
+      "title": "Data Export Functionality",
+      "description": "Implement functionality for users to export their transaction data in CSV format.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        5,
+        8,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "low",
+      "details": "1. Create backend endpoint for generating CSV export\n2. Implement CSV formatting service\n3. Build frontend export button and progress indicator\n4. Add date range selection for export\n5. Implement file download handling\n\nExample CSV export implementation:\n```javascript\n// Backend\nconst createCsvStringifier = require('csv-writer').createObjectCsvStringifier;\n\nasync function exportTransactions(req, res) {\n  const userId = req.user.id;\n  const { startDate, endDate } = req.query;\n  \n  try {\n    const transactions = await transactionService.findTransactions({\n      userId,\n      startDate,\n      endDate,\n      limit: 10000 // Set a reasonable limit\n    });\n    \n    const csvStringifier = createCsvStringifier({\n      header: [\n        { id: 'date', title: 'Date' },\n        { id: 'description', title: 'Description' },\n        { id: 'amount', title: 'Amount' },\n        { id: 'category', title: 'Category' },\n        { id: 'merchant', title: 'Merchant' },\n        { id: 'isRecurring', title: 'Recurring' },\n        { id: 'notes', title: 'Notes' }\n      ]\n    });\n    \n    const csvData = transactions.map(t => ({\n      date: t.date,\n      description: t.description,\n      amount: t.amount.toFixed(2),\n      category: t.category || '',\n      merchant: t.merchant || '',\n      isRecurring: t.isRecurring ? 'Yes' : 'No',\n      notes: t.notes || ''\n    }));\n    \n    const csvString = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(csvData);\n    \n    res.setHeader('Content-Type', 'text/csv');\n    res.setHeader('Content-Disposition', `attachment; filename=transactions-${startDate}-to-${endDate}.csv`);\n    res.send(csvString);\n  } catch (error) {\n    console.error('Failed to export transactions', error);\n    res.status(500).json({ error: 'Failed to export transactions' });\n  }\n}\n\n// Frontend\nfunction ExportButton() {\n  const [startDate, setStartDate] = useState(\n    new Date(new Date().setMonth(new Date().getMonth() - 3)).toISOString().split('T')[0]\n  );\n  const [endDate, setEndDate] = useState(\n    new Date().toISOString().split('T')[0]\n  );\n  const [exporting, setExporting] = useState(false);\n  \n  async function handleExport() {\n    setExporting(true);\n    try {\n      window.location.href = `/api/transactions/export?startDate=${startDate}&endDate=${endDate}`;\n    } finally {\n      // Set timeout to ensure the download starts before changing state\n      setTimeout(() => setExporting(false), 1000);\n    }\n  }\n  \n  return (\n    <div className=\"export-container\">\n      <h3>Export Transactions</h3>\n      <div className=\"date-range\">\n        <label>\n          Start Date:\n          <input \n            type=\"date\" \n            value={startDate} \n            onChange={e => setStartDate(e.target.value)} \n          />\n        </label>\n        <label>\n          End Date:\n          <input \n            type=\"date\" \n            value={endDate} \n            onChange={e => setEndDate(e.target.value)} \n          />\n        </label>\n      </div>\n      <button \n        onClick={handleExport} \n        disabled={exporting}\n      >\n        {exporting ? 'Exporting...' : 'Export to CSV'}\n      </button>\n    </div>\n  );\n}\n```",
+      "testStrategy": "1. Unit tests for CSV generation\n2. Test export endpoint with various date ranges\n3. Test file download in different browsers\n4. Test with large datasets\n5. Verify CSV format is correct and complete\n6. Test date validation\n7. Test error handling",
+      "subtasks": []
+    },
+    {
+      "id": 13,
+      "title": "Account Deletion and Data Removal",
+      "description": "Implement functionality for users to delete their accounts and all associated data, including revoking Plaid access.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "medium",
+      "details": "1. Create account deletion confirmation UI\n2. Implement backend endpoint for account deletion\n3. Add Plaid access token revocation\n4. Implement cascading deletion of all user data\n5. Add confirmation email for account deletion\n\nExample implementation:\n```javascript\n// Backend\nasync function deleteAccount(req, res) {\n  const userId = req.user.id;\n  const { password } = req.body;\n  \n  try {\n    // Verify password\n    const user = await userRepository.findById(userId);\n    const isPasswordValid = await bcrypt.compare(password, user.password_hash);\n    \n    if (!isPasswordValid) {\n      return res.status(401).json({ error: 'Invalid password' });\n    }\n    \n    // Get all Plaid connections\n    const connections = await bankConnectionRepository.findByUserId(userId);\n    \n    // Revoke Plaid access tokens\n    for (const connection of connections) {\n      try {\n        const decryptedToken = decryptAccessToken(connection.plaid_access_token);\n        await plaidClient.itemRemove({\n          access_token: decryptedToken\n        });\n      } catch (error) {\n        console.error(`Failed to revoke Plaid access for connection ${connection.id}`, error);\n        // Continue with deletion even if token revocation fails\n      }\n    }\n    \n    // Delete all user data in order\n    await transactionRepository.deleteByUserId(userId);\n    await recurringTransactionRepository.deleteByUserId(userId);\n    await bankConnectionRepository.deleteByUserId(userId);\n    await userRepository.deleteById(userId);\n    \n    // Send confirmation email\n    await emailService.sendAccountDeletionConfirmation(user.email);\n    \n    res.json({ success: true, message: 'Account deleted successfully' });\n  } catch (error) {\n    console.error('Failed to delete account', error);\n    res.status(500).json({ error: 'Failed to delete account' });\n  }\n}\n\n// Frontend\nfunction DeleteAccountSection() {\n  const [showConfirmation, setShowConfirmation] = useState(false);\n  const [password, setPassword] = useState('');\n  const [error, setError] = useState('');\n  const [deleting, setDeleting] = useState(false);\n  const { logout } = useAuth();\n  const navigate = useNavigate();\n  \n  async function handleDeleteAccount() {\n    if (!password) {\n      setError('Password is required');\n      return;\n    }\n    \n    setDeleting(true);\n    setError('');\n    \n    try {\n      await api.post('/auth/delete-account', { password });\n      await logout();\n      navigate('/');\n    } catch (error) {\n      setError(error.response?.data?.error || 'Failed to delete account');\n      setDeleting(false);\n    }\n  }\n  \n  return (\n    <div className=\"delete-account-section\">\n      <h3>Delete Account</h3>\n      <p>This will permanently delete your account and all your data. This action cannot be undone.</p>\n      \n      {!showConfirmation ? (\n        <button \n          className=\"danger-button\" \n          onClick={() => setShowConfirmation(true)}\n        >\n          Delete My Account\n        </button>\n      ) : (\n        <div className=\"confirmation-form\">\n          <p>Please enter your password to confirm deletion:</p>\n          <input\n            type=\"password\"\n            value={password}\n            onChange={e => setPassword(e.target.value)}\n            placeholder=\"Your password\"\n          />\n          {error && <div className=\"error-message\">{error}</div>}\n          <div className=\"button-group\">\n            <button \n              className=\"cancel-button\" \n              onClick={() => setShowConfirmation(false)}\n              disabled={deleting}\n            >\n              Cancel\n            </button>\n            <button \n              className=\"danger-button\" \n              onClick={handleDeleteAccount}\n              disabled={deleting}\n            >\n              {deleting ? 'Deleting...' : 'Confirm Deletion'}\n            </button>\n          </div>\n        </div>\n      )}\n    </div>\n  );\n}\n```",
+      "testStrategy": "1. Unit tests for account deletion functions\n2. Test Plaid token revocation\n3. Test cascading deletion of all user data\n4. Test password verification\n5. Test confirmation UI flow\n6. Verify all user data is completely removed\n7. Test error handling for failed deletions",
+      "subtasks": []
+    },
+    {
+      "id": 14,
+      "title": "Security Enhancements and Data Encryption",
+      "description": "Implement additional security measures including data encryption, HTTPS enforcement, and security headers.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Implement field-level encryption for sensitive data\n2. Set up HTTPS with proper certificates\n3. Configure security headers (CSP, HSTS, etc.)\n4. Implement rate limiting for authentication endpoints\n5. Add request validation middleware\n6. Set up secure cookie configuration\n7. Implement CSRF protection\n\nExample security implementations:\n```javascript\n// HTTPS enforcement middleware\nfunction requireHttps(req, res, next) {\n  if (!req.secure && process.env.NODE_ENV !== 'development') {\n    return res.redirect(`https://${req.headers.host}${req.url}`);\n  }\n  next();\n}\n\n// Security headers middleware\nfunction securityHeaders(req, res, next) {\n  // Content Security Policy\n  res.setHeader(\n    'Content-Security-Policy',\n    \"default-src 'self'; script-src 'self' https://cdn.plaid.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.plaid.com;\"\n  );\n  \n  // HTTP Strict Transport Security\n  res.setHeader(\n    'Strict-Transport-Security',\n    'max-age=31536000; includeSubDomains'\n  );\n  \n  // Prevent MIME type sniffing\n  res.setHeader('X-Content-Type-Options', 'nosniff');\n  \n  // Prevent clickjacking\n  res.setHeader('X-Frame-Options', 'DENY');\n  \n  // XSS protection\n  res.setHeader('X-XSS-Protection', '1; mode=block');\n  \n  next();\n}\n\n// Rate limiting for auth endpoints\nconst rateLimit = require('express-rate-limit');\n\nconst authLimiter = rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 5, // 5 requests per window\n  message: 'Too many login attempts, please try again later'\n});\n\n// Apply to auth routes\napp.use('/api/auth/login', authLimiter);\napp.use('/api/auth/register', authLimiter);\n\n// Secure cookie configuration\napp.use(session({\n  secret: process.env.SESSION_SECRET,\n  cookie: {\n    httpOnly: true,\n    secure: process.env.NODE_ENV !== 'development',\n    sameSite: 'strict',\n    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days\n  },\n  resave: false,\n  saveUninitialized: false\n}));\n```",
+      "testStrategy": "1. Security scanning with tools like OWASP ZAP\n2. Test HTTPS enforcement\n3. Verify security headers are properly set\n4. Test rate limiting functionality\n5. Verify encryption/decryption of sensitive data\n6. Test CSRF protection\n7. Penetration testing for common vulnerabilities\n8. Test secure cookie configuration",
+      "subtasks": []
+    },
+    {
+      "id": 15,
+      "title": "Final Testing, Bug Fixes, and Deployment",
+      "description": "Conduct comprehensive testing, fix bugs, and prepare the application for deployment.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19
+      ],
+      "priority": "high",
+      "details": "1. Set up end-to-end testing suite\n2. Conduct comprehensive testing of all features\n3. Fix identified bugs and issues\n4. Optimize performance\n5. Set up production deployment pipeline\n6. Configure monitoring and error tracking\n7. Create documentation for users\n8. Prepare for private beta launch\n\nDeployment checklist:\n- Database migrations are ready\n- Environment variables are configured\n- HTTPS certificates are valid\n- Backups are configured\n- Error monitoring is set up\n- Performance monitoring is in place\n- Security headers are configured\n- Rate limiting is enabled\n- Database connection pooling is optimized\n- Static assets are optimized and cached\n- API endpoints are properly secured\n- User data isolation is verified\n\nExample deployment script:\n```bash\n#!/bin/bash\n\n# Build frontend\ncd frontend\nnpm run build\ncd ..\n\n# Run database migrations\nnpx sequelize-cli db:migrate\n\n# Deploy backend\npm2 stop ledgerly-api || true\npm2 start ecosystem.config.js --env production\n\n# Deploy frontend\nrsync -avz --delete frontend/build/ /var/www/ledgerly/\n\n# Restart nginx\nsystemctl restart nginx\n\n# Test deployment\ncurl -s https://ledgerly.example.com/health | grep 'ok'\n\necho \"Deployment completed at $(date)\"\n```",
+      "testStrategy": "1. End-to-end testing of critical flows\n2. Cross-browser testing\n3. Mobile responsiveness testing\n4. Performance testing under load\n5. Security testing\n6. Database migration testing\n7. Backup and restore testing\n8. Error handling and recovery testing\n9. User acceptance testing with beta users\n10. Verify data isolation between users",
+      "subtasks": []
+    },
+    {
+      "id": 16,
+      "title": "Task #16: Create UI Style Guide for LedgerLY",
+      "description": "Develop a comprehensive UI style guide for LedgerLY that defines visual standards including color palette, typography, spacing, button styles, chart styles, and accessibility requirements to ensure a consistent, clear, and trustworthy fintech dashboard experience.",
+      "details": "The UI style guide should include the following components:\n\n1. Brand Identity Overview:\n   - Brief explanation of LedgerLY's brand values (clarity, minimalism, trustworthiness)\n   - Target audience considerations for a fintech application\n\n2. Color Palette:\n   - Primary, secondary, and accent colors with hex codes\n   - Semantic colors for success, warning, error, and information states\n   - Background and text color combinations with contrast ratios\n   - Guidelines for color usage in different contexts (navigation, content areas, charts)\n\n3. Typography:\n   - Font family selections (primary and secondary)\n   - Font sizes for different text elements (headings h1-h6, body text, captions, labels)\n   - Line heights, letter spacing, and font weights\n   - Text color usage guidelines\n\n4. Spacing System:\n   - Base unit definition\n   - Spacing scale (xs, sm, md, lg, xl)\n   - Margin and padding guidelines\n   - Grid system specifications\n   - Component spacing standards\n\n5. Component Library:\n   - Button styles (primary, secondary, tertiary, disabled states)\n   - Form elements (inputs, dropdowns, checkboxes, radio buttons)\n   - Navigation components (menus, tabs, breadcrumbs)\n   - Cards and containers\n   - Modals and dialogs\n   - Loaders and progress indicators\n\n6. Data Visualization:\n   - Chart and graph styles (line, bar, pie, etc.)\n   - Data table designs\n   - Color usage for data representation\n   - Legend and label standards\n\n7. Accessibility Standards:\n   - WCAG 2.1 AA compliance requirements\n   - Color contrast guidelines\n   - Keyboard navigation support\n   - Screen reader considerations\n   - Focus state styling\n\n8. Responsive Design Guidelines:\n   - Breakpoints for different device sizes\n   - Component behavior across breakpoints\n   - Touch target size requirements\n\n9. Implementation Resources:\n   - CSS variables or design tokens\n   - Component code examples\n   - Design file resources (Figma/Sketch)\n\nThe style guide should be created in a format that's easily accessible to both designers and developers, such as a web-based documentation site or a comprehensive PDF with code examples.",
+      "testStrategy": "Testing the UI style guide should involve multiple stages to ensure it's comprehensive, implementable, and effective:\n\n1. Documentation Review:\n   - Conduct a peer review with designers and developers to ensure all necessary components are included\n   - Verify that all color codes, typography specifications, and spacing values are clearly defined\n   - Check for consistency in terminology and naming conventions\n   - Ensure all accessibility requirements are properly documented\n\n2. Visual Consistency Check:\n   - Create sample mockups applying the style guide to verify visual coherence\n   - Compare different sections of the application using the style guide to ensure consistency\n   - Test color combinations for sufficient contrast using tools like WebAIM's Contrast Checker\n   - Verify typography scales work harmoniously together\n\n3. Developer Implementation Testing:\n   - Have developers implement a sample component library based on the style guide\n   - Test the implementation across different browsers and devices\n   - Verify that CSS variables or design tokens are correctly defined and applied\n   - Check that responsive behavior matches the guidelines\n\n4. Accessibility Compliance:\n   - Conduct automated accessibility testing using tools like Axe or WAVE\n   - Perform manual keyboard navigation testing\n   - Test with screen readers (NVDA, VoiceOver, JAWS)\n   - Verify color contrast meets WCAG 2.1 AA standards (minimum 4.5:1 for normal text, 3:1 for large text)\n\n5. Stakeholder Review:\n   - Present the style guide to project stakeholders for feedback\n   - Gather input from UX designers, developers, and product managers\n   - Make necessary adjustments based on feedback\n\n6. User Testing:\n   - Create prototype interfaces using the style guide\n   - Conduct user testing sessions to gather feedback on clarity, readability, and overall experience\n   - Pay special attention to users with accessibility needs\n\n7. Documentation Usability:\n   - Test how easily new team members can understand and apply the style guide\n   - Verify that all examples and code snippets work as expected\n   - Check that the guide format (web/PDF) is accessible and searchable\n\n8. Version Control and Maintenance Plan:\n   - Establish a process for updating the style guide\n   - Create a changelog to track modifications\n   - Set up a review schedule for periodic updates\n\nThe style guide should be considered complete when it passes all these testing phases and is approved by both the design and development teams.",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "subtasks": []
+    },
+    {
+      "id": 17,
+      "title": "Task #17: Create Comprehensive UI Component Library for LedgerLY",
+      "description": "Document and define all reusable UI components needed for LedgerLY's interface, including detailed specifications for dashboard, onboarding, transaction tables, charts, modals, forms, and notification components.",
+      "details": "The developer should create a comprehensive component library document that includes:\n\n1. **Dashboard Components**:\n   - Navigation sidebar/header\n   - Summary cards/widgets\n   - Quick action buttons\n   - Account balance displays\n   - Recent activity feeds\n\n2. **Onboarding Components**:\n   - Progress indicators\n   - Step navigation\n   - Welcome screens\n   - Account setup forms\n   - Verification components\n\n3. **Transaction Table Components**:\n   - Sortable/filterable table\n   - Transaction row items\n   - Pagination controls\n   - Search/filter components\n   - Export functionality\n\n4. **Chart Components**:\n   - Line/area charts for trends\n   - Bar/column charts for comparisons\n   - Pie/donut charts for distributions\n   - Interactive tooltips\n   - Legend components\n\n5. **Modal Components**:\n   - Confirmation dialogs\n   - Detail view modals\n   - Settings/preference modals\n   - Alert modals\n   - Multi-step modals\n\n6. **Form Components**:\n   - Text inputs\n   - Dropdown selects\n   - Date pickers\n   - Checkboxes/radio buttons\n   - Form validation indicators\n\n7. **Notification Components**:\n   - Toast notifications\n   - Alert banners\n   - Badge indicators\n   - Status indicators\n   - Loading/progress indicators\n\nFor each component, document:\n- Component name and purpose\n- Key props/parameters\n- State management requirements\n- Variants/modifiers\n- Accessibility considerations\n- Example usage\n- Dependencies on other components\n\nThis task should align with the UI Style Guide created in Task #16, ensuring all components follow the established design system. The component library should be structured to facilitate implementation by the development team and ensure consistency across the application.",
+      "testStrategy": "The component library documentation should be verified through the following steps:\n\n1. **Completeness Check**:\n   - Verify that all required component categories are included\n   - Ensure no critical components are missing from any section\n   - Confirm that each component has all required documentation fields\n\n2. **Consistency Review**:\n   - Check that component specifications align with the UI Style Guide (Task #16)\n   - Ensure naming conventions are consistent throughout the document\n   - Verify that similar components have similar documentation structure\n\n3. **Technical Accuracy**:\n   - Review props/states for technical feasibility\n   - Confirm that component interactions are clearly defined\n   - Validate that state management approaches are appropriate\n\n4. **Usability Assessment**:\n   - Have 2-3 developers review the documentation for clarity\n   - Ensure component purposes and usage examples are understandable\n   - Verify that implementation guidance is sufficient\n\n5. **Gap Analysis**:\n   - Compare component list against wireframes/mockups to identify any missing elements\n   - Review against user stories to ensure all functional needs are covered\n   - Check for edge cases or specialized components that might be overlooked\n\n6. **Documentation Format**:\n   - Ensure the document is well-organized and easily navigable\n   - Verify that visual examples or references are included where helpful\n   - Confirm the document is in a format accessible to all team members\n\nThe component library should be considered complete when it passes all these verification steps and receives approval from both the design and development team leads.",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "subtasks": []
+    },
+    {
+      "id": 18,
+      "title": "Task #18: Design Initial Wireframes for LedgerLY Core User Flows",
+      "description": "Create low-fidelity wireframes for LedgerLY's critical user journeys including registration/login, bank connection onboarding, main dashboard, and transaction editing interfaces, emphasizing clarity, minimalism, and trust-building design elements.",
+      "details": "The wireframes should be created using industry-standard design tools (Figma, Sketch, or Adobe XD) and include the following key screens:\n\n1. Registration and Login:\n   - User registration form with appropriate fields (name, email, password)\n   - Password requirements and strength indicator\n   - Email verification flow\n   - Login screen with forgot password option\n   - Two-factor authentication screens (if applicable)\n\n2. Onboarding (Bank Connection):\n   - Step-by-step bank connection wizard\n   - Bank selection interface\n   - Secure credential input screens\n   - Connection success/failure states\n   - Multi-account selection if user has multiple accounts\n   - Clear security/privacy messaging throughout\n\n3. Main Dashboard:\n   - Overview section with key financial metrics\n   - Account balance summary\n   - Income vs. expenses visualization\n   - Spending by category charts\n   - Recent transactions list (preview of 5-7 most recent)\n   - Quick actions menu\n   - Navigation to other sections\n\n4. Transaction Management:\n   - Transaction list/table with filtering and sorting options\n   - Transaction detail view\n   - Edit transaction form (category, tags, notes, split transaction)\n   - Bulk edit capabilities\n   - Search and filter mechanisms\n\nDesign Principles to Follow:\n- Prioritize clarity: Use ample white space, clear hierarchy, and intuitive layouts\n- Embrace minimalism: Remove unnecessary elements, focus on essential information\n- Build trust: Include security indicators, clear data handling messaging\n- Ensure accessibility: Consider contrast, text size, and touch targets\n- Maintain consistency with the UI Style Guide (Task #16)\n- Incorporate components from the UI Component Library (Task #17)\n\nDeliverables should include:\n- Complete set of wireframes for all specified screens\n- User flow diagrams showing the connection between screens\n- Annotations explaining key interactions and functionality\n- Mobile and desktop versions of critical screens",
+      "testStrategy": "The wireframes will be evaluated through the following methods:\n\n1. Design Review:\n   - Conduct a formal design review with the product team, developers, and stakeholders\n   - Verify all required screens and user flows are represented\n   - Ensure wireframes align with the UI Style Guide (Task #16)\n   - Confirm wireframes incorporate components from the UI Component Library (Task #17)\n   - Check that design principles (clarity, minimalism, trust) are properly applied\n\n2. User Flow Validation:\n   - Walk through each user journey step-by-step to identify any gaps or dead-ends\n   - Verify logical progression between screens\n   - Ensure all error states and edge cases are accounted for\n   - Confirm that navigation patterns are consistent and intuitive\n\n3. Stakeholder Feedback:\n   - Present wireframes to key stakeholders for feedback\n   - Document and prioritize suggested changes\n   - Iterate on designs based on feedback\n\n4. Usability Testing:\n   - Conduct informal usability tests with 3-5 representative users\n   - Create simple tasks for users to complete using the wireframes\n   - Observe and document any points of confusion or friction\n   - Collect qualitative feedback on the overall experience\n\n5. Developer Feasibility Check:\n   - Review wireframes with development team to ensure technical feasibility\n   - Identify any potential implementation challenges\n   - Confirm alignment with planned backend functionality\n\nAcceptance Criteria:\n- Complete set of wireframes covering all specified user flows\n- Documentation of user journeys and screen connections\n- Alignment with UI Style Guide and Component Library\n- Positive feedback from stakeholder review\n- Validation through initial usability testing\n- Sign-off from product owner and development lead",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "subtasks": []
+    },
+    {
+      "id": 19,
+      "title": "Task #19: Develop Interactive Prototype for LedgerLY Based on Wireframes",
+      "description": "Create a high-fidelity, clickable prototype for LedgerLY using Figma or Adobe XD that demonstrates all core user flows including registration/login, onboarding, dashboard navigation, transaction editing, and data export functionality.",
+      "details": "The prototype should be built upon the wireframes created in Task #18 and adhere to the UI style guide (Task #16) and component library (Task #17). Key implementation requirements:\n\n1. Tool Selection: Use either Figma or Adobe XD for prototype development, ensuring the tool supports interactive elements and sharing capabilities.\n\n2. User Flow Implementation:\n   - Registration/Login: Include email/password registration, social login options, and password recovery flow\n   - Onboarding: Create step-by-step screens for bank connection, initial preferences setup, and welcome tour\n   - Dashboard Navigation: Design interactive navigation between main sections (accounts, transactions, reports, settings)\n   - Transaction Editing: Include flows for categorizing, splitting, adding notes, and attaching receipts to transactions\n   - Data Export: Demonstrate PDF/CSV export options with customizable parameters\n\n3. Design Principles:\n   - Ruthless UI Clarity: Eliminate visual clutter, use clear hierarchy, and ensure each screen has a single primary action\n   - Fintech Trust Elements: Incorporate security indicators, verification steps, and professional financial styling\n   - Responsive Considerations: Design for both desktop and mobile experiences with appropriate interaction patterns\n\n4. Interactive Elements:\n   - Create realistic hover/active states for all clickable elements\n   - Implement form validation feedback\n   - Include loading states and success/error messages\n   - Add micro-interactions that enhance usability (tooltips, progressive disclosure)\n\n5. Deliverables:\n   - Complete Figma/XD file with organized pages/artboards\n   - Shareable prototype link for stakeholder review\n   - Documentation of user flows with screen connections\n   - Presentation highlighting key interactions and design decisions",
+      "testStrategy": "The prototype will be evaluated through a comprehensive testing approach:\n\n1. Stakeholder Review:\n   - Schedule a formal presentation with product owners, developers, and key stakeholders\n   - Demonstrate each user flow end-to-end\n   - Document feedback and required revisions\n\n2. User Flow Validation:\n   - Create a test script covering all specified user journeys\n   - Verify that every screen has appropriate navigation options\n   - Confirm that all interactive elements respond correctly\n   - Ensure no dead-ends exist in the prototype\n\n3. Usability Testing:\n   - Conduct moderated testing sessions with 5-7 potential users\n   - Assign specific tasks covering each core flow\n   - Measure completion rates, time-on-task, and error rates\n   - Collect qualitative feedback on clarity and trust factors\n\n4. Design Consistency Check:\n   - Audit the prototype against the UI style guide (Task #16)\n   - Verify consistent use of components from the component library (Task #17)\n   - Check color contrast and typography for accessibility compliance\n\n5. Technical Feasibility Review:\n   - Review with development team to identify any interaction patterns that may be challenging to implement\n   - Document any technical constraints or alternative approaches\n\n6. Acceptance Criteria:\n   - All specified user flows are fully navigable without errors\n   - Design adheres to established style guide and component library\n   - Usability testing shows >85% task completion rate\n   - Stakeholders approve the prototype for development handoff",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "subtasks": []
+    }
+  ]
+}

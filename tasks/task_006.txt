@@ -1,0 +1,119 @@
+# Task ID: 6
+# Title: Dashboard Analytics Backend
+# Status: done
+# Dependencies: 1, 2, 3, 4, 5, 16, 17, 18, 19
+# Priority: medium
+# Description: Implement backend APIs to provide analytics data for the dashboard, including cash flow, recurring transactions, and category breakdowns, with secure access to sensitive data using AWS Secrets Manager.
+# Details:
+1. Create analytics service with the following endpoints:
+   - Monthly cash flow (income vs. expenses)
+   - Net cash trend over time
+   - Recurring transactions list
+   - Expense breakdown by category
+   - Expense breakdown by merchant
+
+2. Implement data aggregation functions
+3. Optimize queries for performance
+4. Ensure proper date range filtering
+5. Add caching for frequently accessed analytics
+6. Integrate with AWS Secrets Manager for secure access to:
+   - Database credentials
+   - API keys for third-party services
+   - JWT signing keys
+
+Example analytics service:
+```javascript
+async function getMonthlyCashFlow(userId, startDate, endDate) {
+  // Get database credentials from AWS Secrets Manager
+  const dbCredentials = await secretsManager.getSecret('database/credentials');
+  
+  const months = getMonthsBetweenDates(startDate, endDate);
+  const result = [];
+  
+  for (const month of months) {
+    const { startOfMonth, endOfMonth } = getMonthBoundaries(month);
+    
+    const transactions = await transactionRepository.findByUserIdAndDateRange(
+      userId, startOfMonth, endOfMonth
+    );
+    
+    const income = transactions
+      .filter(t => t.amount > 0)
+      .reduce((sum, t) => sum + t.amount, 0);
+      
+    const expenses = transactions
+      .filter(t => t.amount < 0)
+      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    
+    result.push({
+      month: formatMonth(month),
+      income,
+      expenses,
+      net: income - expenses
+    });
+  }
+  
+  return result;
+}
+
+async function getExpensesByCategory(userId, startDate, endDate) {
+  const transactions = await transactionRepository.findByUserIdAndDateRange(
+    userId, startDate, endDate
+  );
+  
+  const expensesByCategory = {};
+  
+  transactions
+    .filter(t => t.amount < 0)
+    .forEach(t => {
+      const category = t.category || 'Uncategorized';
+      if (!expensesByCategory[category]) expensesByCategory[category] = 0;
+      expensesByCategory[category] += Math.abs(t.amount);
+    });
+  
+  return Object.entries(expensesByCategory).map(([category, amount]) => ({
+    category,
+    amount
+  }));
+}
+```
+
+# Test Strategy:
+1. Unit tests for analytics calculation functions
+2. Integration tests with sample transaction data
+3. Performance testing with large datasets
+4. Test date range filtering
+5. Verify data isolation between users
+6. Test edge cases (no transactions, single transaction)
+7. Test AWS Secrets Manager integration:
+   - Verify secure retrieval of database credentials
+   - Test fallback mechanisms if secrets access fails
+   - Validate proper IAM role configuration
+   - Ensure secrets are not exposed in logs or responses
+8. Verify CloudWatch audit logging for secrets access
+
+# Subtasks:
+## 6.1. Integrate AWS Secrets Manager for sensitive data [done]
+### Dependencies: None
+### Description: Implement secure access to database credentials, API keys, and JWT signing keys using AWS Secrets Manager
+### Details:
+
+
+## 6.2. Configure IAM policies for analytics service [done]
+### Dependencies: None
+### Description: Set up appropriate IAM policies for the analytics service to access required secrets
+### Details:
+
+
+## 6.3. Implement environment-specific secret handling [done]
+### Dependencies: None
+### Description: Configure the analytics service to use different secrets based on the deployment environment (dev, staging, prod)
+### Details:
+
+
+## 6.4. Add CloudWatch audit logging [done]
+### Dependencies: None
+### Description: Implement CloudWatch logging for tracking secrets access and analytics API usage
+### Details:
+
+

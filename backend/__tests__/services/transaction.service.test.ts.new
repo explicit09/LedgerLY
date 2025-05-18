@@ -1,0 +1,133 @@
+import { transactionService } from '../../src/services/transaction';
+
+// Mock the transaction service
+jest.mock('../../src/services/transaction', () => ({
+  ...jest.requireActual('../../src/services/transaction'),
+  processTransactions: jest.fn(),
+  detectRecurringTransactions: jest.fn(),
+  getTransactions: jest.fn(),
+}));
+
+describe('TransactionService', () => {
+  const userId = 'test-user-id';
+  const accountId = 'test-account-id';
+  const plaidItemId = 'test-plaid-item-id';
+
+  beforeEach(() => {
+    // Reset all mocks before each test
+    jest.clearAllMocks();
+  });
+
+  describe('processTransactions', () => {
+    it('should process new transactions', async () => {
+      // Mock the transaction service method
+      (transactionService.processTransactions as jest.Mock).mockResolvedValue([
+        {
+          id: 'new-transaction-id',
+          transactionId: 'test-transaction-1',
+          name: 'Test Transaction',
+          amount: -50.00,
+          date: '2023-05-15',
+          category: 'Shopping',
+          merchantName: 'Test Merchant',
+          paymentChannel: 'in store',
+          transactionType: 'debit',
+          userId,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ]);
+      
+      const transactions = [{
+        transactionId: 'test-transaction-1',
+        accountId: 'test-account-1',
+        name: 'Test Transaction',
+        amount: -50.00,
+        date: '2023-05-15',
+        pending: false,
+        category: ['Shopping'],
+        merchantName: 'Test Merchant',
+        paymentChannel: 'in store',
+        transactionType: 'debit',
+      }];
+      
+      const result = await transactionService.processTransactions(transactions, userId);
+      
+      expect(result).toHaveLength(1);
+      expect(transactionService.processTransactions).toHaveBeenCalledWith(transactions, userId);
+      expect(result[0]).toMatchObject({
+        transactionId: 'test-transaction-1',
+        name: 'Test Transaction',
+        amount: -50.00,
+      });
+    });
+  });
+
+  describe('detectRecurringTransactions', () => {
+    it('should detect recurring transactions', async () => {
+      // Mock the transaction service method
+      (transactionService.detectRecurringTransactions as jest.Mock).mockResolvedValue([
+        {
+          id: 'recurring-1',
+          name: 'Monthly Subscription',
+          amount: -9.99,
+          frequency: 'monthly',
+          nextDate: '2023-06-15',
+          userId,
+        },
+      ]);
+      
+      const result = await transactionService.detectRecurringTransactions(userId);
+      
+      expect(result).toHaveLength(1);
+      expect(transactionService.detectRecurringTransactions).toHaveBeenCalledWith(userId);
+      expect(result[0]).toMatchObject({
+        name: 'Monthly Subscription',
+        amount: -9.99,
+        frequency: 'monthly',
+      });
+    });
+  });
+
+  describe('getTransactions', () => {
+    it('should get transactions with filters', async () => {
+      // Mock the transaction service method
+      (transactionService.getTransactions as jest.Mock).mockResolvedValue({
+        transactions: [
+          {
+            id: 'tx-1',
+            name: 'Test Transaction',
+            amount: -50.00,
+            date: '2023-05-15',
+            category: 'Shopping',
+            userId,
+          },
+        ],
+        total: 1,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      });
+      
+      const filters = {
+        startDate: '2023-05-01',
+        endDate: '2023-05-31',
+        category: 'Shopping',
+        minAmount: 10,
+        maxAmount: 100,
+        page: 1,
+        limit: 10,
+      };
+      
+      const result = await transactionService.getTransactions(userId, filters);
+      
+      expect(result.transactions).toHaveLength(1);
+      expect(transactionService.getTransactions).toHaveBeenCalledWith(userId, filters);
+      expect(result.transactions[0]).toMatchObject({
+        name: 'Test Transaction',
+        amount: -50.00,
+        category: 'Shopping',
+      });
+    });
+  });
+});

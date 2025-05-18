@@ -1,0 +1,51 @@
+# Node / Yarn / NPM
+node_modules/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+!.env.template
+
+# Build Output
+build/
+dist/
+coverage/
+
+# IDE / Editor specific
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Optional Files
+.tern-project
+.tern-port
+
+# React specific
+.eslintcache
+.stylelintcache
+
+# TypeScript specific
+*.tsbuildinfo
+
+# Task Master specific
+/tasks/tasks.json.bak 

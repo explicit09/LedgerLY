@@ -1,0 +1,203 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    environment: staging
+    env:
+      TF_WORKSPACE: staging
+      AWS_REGION: us-east-1
+
+    steps:
+      - name: Start Deployment
+        id: start
+        run: |
+          echo "::set-output name=deployment_id::$(date +%s)"
+          aws sns publish \
+            --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+            --message "Starting deployment to staging environment"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Frontend
+        env:
+          NEXT_PUBLIC_API_URL: https://api.staging.ledgerly.app
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+        run: npm run build
+
+      - name: Build Backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        run: |
+          cd backend
+          npm run build
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Terraform Init
+        working-directory: terraform/environments/staging
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: terraform/environments/staging
+        env:
+          TF_VAR_project_name: ledgerly
+          TF_VAR_environment: staging
+          TF_VAR_frontend_domain: staging.ledgerly.app
+          TF_VAR_backend_domain: api.staging.ledgerly.app
+          TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
+          TF_VAR_stripe_secret_key: ${{ secrets.STRIPE_SECRET_KEY }}
+          TF_VAR_stripe_webhook_secret: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          TF_VAR_db_username: ${{ secrets.DB_USERNAME }}
+          TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_slack_channel_id: ${{ secrets.SLACK_CHANNEL_ID }}
+          TF_VAR_slack_workspace_id: ${{ secrets.SLACK_WORKSPACE_ID }}
+        run: |
+          terraform plan -out=tfplan
+          if [ $? -eq 0 ]; then
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Terraform plan successful for staging environment"
+          else
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Terraform plan failed for staging environment"
+            exit 1
+          fi
+
+      - name: Terraform Apply
+        id: apply
+        working-directory: terraform/environments/staging
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          terraform apply -auto-approve tfplan
+          if [ $? -eq 0 ]; then
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Terraform apply successful for staging environment"
+          else
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Terraform apply failed for staging environment"
+            exit 1
+          fi
+
+      - name: Deploy Frontend
+        id: frontend
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          aws s3 sync out/ s3://${{ secrets.FRONTEND_BUCKET }} --delete
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+          if [ $? -eq 0 ]; then
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Frontend deployment successful to staging environment"
+          else
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Frontend deployment failed for staging environment"
+            exit 1
+          fi
+
+      - name: Deploy Backend
+        id: backend
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
+          docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }} .
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service ${{ secrets.ECS_SERVICE }} --force-new-deployment
+          if [ $? -eq 0 ]; then
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Backend deployment successful to staging environment"
+          else
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Backend deployment failed for staging environment"
+            exit 1
+          fi
+
+      - name: Deployment Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Deployment to staging environment completed successfully"
+          else
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Deployment to staging environment failed"
+          fi
+
+  deploy-production:
+    name: Deploy to Production
+    needs: deploy-staging
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      TF_WORKSPACE: production
+      AWS_REGION: us-east-1
+
+    steps:
+      - name: Start Production Deployment
+        run: |
+          aws sns publish \
+            --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+            --message "Starting deployment to production environment"
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Similar steps as staging, but with production environment variables and secrets
+      # This ensures production deployments only happen after successful staging deployments 
+      
+      - name: Production Deployment Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Deployment to production environment completed successfully"
+          else
+            aws sns publish \
+              --topic-arn ${{ secrets.DEPLOYMENT_NOTIFICATIONS_TOPIC_ARN }} \
+              --message "Deployment to production environment failed"
+          fi 

@@ -1,0 +1,113 @@
+# Task ID: 5
+# Title: Transaction Data Processing and Storage
+# Status: pending
+# Dependencies: 1, 2, 3, 4, 16, 17, 18, 19
+# Priority: medium
+# Description: Process and store transaction data from Plaid, including categorization and recurring transaction detection.
+# Details:
+1. Create transaction processing service
+2. Implement transaction deduplication logic
+3. Store transactions in database with user_id association
+4. Auto-categorize transactions as income or expense based on amount
+5. Implement recurring transaction detection algorithm
+   - Group similar transactions by amount and merchant
+   - Analyze transaction frequency patterns
+   - Flag transactions as recurring based on pattern detection
+
+Recurring transaction detection algorithm:
+```javascript
+function detectRecurringTransactions(transactions, userId) {
+  // Group transactions by merchant and similar amounts (within 5% variance)
+  const groups = {};
+  
+  transactions.forEach(transaction => {
+    const key = `${transaction.merchant_name}-${Math.round(transaction.amount)}`;  
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(transaction);
+  });
+  
+  const recurringCandidates = [];
+  
+  // Analyze each group for recurring patterns
+  Object.entries(groups).forEach(([key, txns]) => {
+    if (txns.length < 2) return; // Need at least 2 transactions to detect pattern
+    
+    // Sort by date
+    txns.sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    // Calculate days between transactions
+    const intervals = [];
+    for (let i = 1; i < txns.length; i++) {
+      const daysDiff = Math.round(
+        (new Date(txns[i].date) - new Date(txns[i-1].date)) / (1000 * 60 * 60 * 24)
+      );
+      intervals.push(daysDiff);
+    }
+    
+    // Check if intervals are consistent (within 3 days variance)
+    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length;
+    const isConsistent = intervals.every(interval => Math.abs(interval - avgInterval) <= 3);
+    
+    if (isConsistent && avgInterval <= 35) { // Monthly or more frequent
+      recurringCandidates.push({
+        userId,
+        name: txns[0].merchant_name,
+        amount: txns[0].amount,
+        frequency: determineFrequency(avgInterval),
+        transactions: txns.map(t => t.id)
+      });
+    }
+  });
+  
+  return recurringCandidates;
+}
+
+function determineFrequency(avgDays) {
+  if (avgDays <= 7.5) return 'weekly';
+  if (avgDays <= 15) return 'biweekly';
+  return 'monthly';
+}
+```
+
+6. Integrate with CI/CD pipeline for automated testing and deployment
+   - Ensure transaction processing service is included in backend workflow
+   - Add database migration scripts for transaction tables
+   - Configure environment variables for different environments (dev, staging, prod)
+
+# Test Strategy:
+1. Unit tests for transaction processing functions
+2. Test recurring transaction detection with various patterns
+3. Test deduplication logic
+4. Integration tests with sample Plaid data
+5. Performance testing with large transaction sets
+6. Verify user data isolation in transaction storage
+7. CI/CD pipeline tests:
+   - Automated testing in GitHub Actions workflow
+   - Database migration tests for transaction tables
+   - Environment-specific configuration tests (staging vs production)
+
+# Subtasks:
+## 5.1. Integrate transaction processing with CI/CD pipeline [pending]
+### Dependencies: None
+### Description: Update transaction processing service to work with the newly created CI/CD pipeline
+### Details:
+
+
+## 5.2. Create database migration scripts for transaction tables [pending]
+### Dependencies: None
+### Description: Develop migration scripts for transaction tables that can be run automatically in the CI/CD pipeline
+### Details:
+
+
+## 5.3. Configure environment-specific settings for transaction processing [pending]
+### Dependencies: None
+### Description: Set up configuration for transaction processing service across dev, staging, and production environments
+### Details:
+
+
+## 5.4. Add transaction service tests to GitHub Actions workflow [pending]
+### Dependencies: None
+### Description: Ensure transaction processing tests are included in the backend testing workflow
+### Details:
+
+

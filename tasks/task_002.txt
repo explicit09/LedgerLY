@@ -1,0 +1,143 @@
+# Task ID: 2
+# Title: Database Schema Design and Implementation
+# Status: done
+# Dependencies: 1, 16, 17, 18, 19
+# Priority: high
+# Description: Design and implement the database schema with proper user data isolation and encryption capabilities.
+# Details:
+1. Set up PostgreSQL database with Prisma ORM
+2. Design schema with the following tables:
+   - Users (id, email, password_hash, created_at, updated_at)
+   - BankConnections (id, user_id, plaid_access_token [encrypted], institution_name, last_sync_at)
+   - Transactions (id, user_id, bank_connection_id, amount, date, description, category, is_recurring, notes, merchant, created_at, updated_at)
+   - RecurringTransactions (id, user_id, name, amount, frequency, last_detected_at)
+   - FinancialAccounts (id, user_id, name, type, balance, etc.)
+   - Budgets (id, user_id, category, amount, period, etc.)
+   - FinancialGoals (id, user_id, name, target_amount, current_amount, target_date, etc.)
+   - Reports (id, user_id, type, parameters, etc.)
+   - Notifications (id, user_id, type, message, read_status, etc.)
+   - Attachments (id, user_id, transaction_id, file_path, etc.)
+   - Tags (id, user_id, name, etc.)
+
+3. Implement data encryption for sensitive fields
+4. Set up database migrations
+5. Create database access layer through Prisma client
+6. Implement strict user data isolation through database queries
+7. Add proper relationships and indexes for performance optimization
+8. Implement enum types for various fields (transaction categories, account types, etc.)
+9. Create database initialization script
+10. Add seed script for default categories
+11. Set up TypeScript configuration
+12. Add necessary development dependencies
+
+Encryption implementation:
+The encryption implementation is now complete with the following components:
+
+1. **Encryption Service** (`src/utils/encryption.ts`):
+   - AES-256-GCM encryption with a 32-byte key derived from a secret
+   - IV (Initialization Vector) and authentication tag for each encryption
+   - TypeScript types for encrypted fields
+   - Helper methods for encryption/decryption and checking if a string is encrypted
+
+2. **Prisma Middleware** (`src/middleware/encryption.middleware.ts`):
+   - Automatic encryption of sensitive fields before database writes
+   - Automatic decryption of fields after database reads
+   - Configuration for encrypted fields per model
+   - Support for nested objects and arrays
+
+3. **Encrypted Fields Configuration**:
+   - User: resetToken, verificationCode
+   - Transaction: description, category, notes
+   - PlaidItem: accessToken, error
+
+4. **Prisma Integration** (`src/lib/prisma.ts`):
+   - Middleware applied to the Prisma client
+   - Type-safe encrypted fields
+   - Development logging for debugging
+
+# Test Strategy:
+1. Unit tests for database models and Prisma repositories
+2. Test data isolation between users
+3. Verify encryption/decryption functions
+4. Performance testing for common queries with indexes
+5. Test database migrations
+6. Verify seed data for default categories
+7. Test relationships between entities
+8. Validate TypeScript types against schema
+9. Test encryption middleware with various data types
+10. Verify automatic encryption/decryption of configured fields
+11. Test error handling for encryption/decryption operations
+
+# Subtasks:
+## 2.1. Set up Prisma ORM with PostgreSQL [done]
+### Dependencies: None
+### Description: Install and configure Prisma ORM to work with PostgreSQL database.
+### Details:
+
+
+## 2.2. Create comprehensive database schema [done]
+### Dependencies: None
+### Description: Design and implement database models for users, financial accounts, transactions, budgets, goals, recurring transactions, reports, notifications, attachments, and tags.
+### Details:
+
+
+## 2.3. Add relationships and indexes [done]
+### Dependencies: None
+### Description: Implement proper relationships between entities and add appropriate indexes for performance optimization.
+### Details:
+
+
+## 2.4. Implement enum types [done]
+### Dependencies: None
+### Description: Create enum types for various fields like transaction categories, account types, etc.
+### Details:
+
+
+## 2.5. Create database initialization script [done]
+### Dependencies: None
+### Description: Develop script to initialize the database with the required schema.
+### Details:
+
+
+## 2.6. Add seed script for default categories [done]
+### Dependencies: None
+### Description: Create seed script to populate default transaction categories and other reference data.
+### Details:
+
+
+## 2.7. Set up TypeScript configuration [done]
+### Dependencies: None
+### Description: Configure TypeScript to work with Prisma and ensure type safety.
+### Details:
+
+
+## 2.8. Add development dependencies [done]
+### Dependencies: None
+### Description: Install necessary development dependencies for database management and testing.
+### Details:
+
+
+## 2.9. Implement data encryption for sensitive fields [done]
+### Dependencies: None
+### Description: Implement encryption/decryption utilities for sensitive data like access tokens and financial information.
+### Details:
+
+
+## 2.11. Create database tests [done]
+### Dependencies: None
+### Description: Develop comprehensive tests for database models, relationships, and queries.
+### Details:
+
+
+## 2.12. Test encryption middleware [done]
+### Dependencies: None
+### Description: Create tests to verify the encryption middleware works correctly with various data types and handles errors appropriately.
+### Details:
+
+
+## 2.13. Document encryption implementation [done]
+### Dependencies: None
+### Description: Create documentation for the encryption service, middleware, and configuration for future reference and onboarding.
+### Details:
+
+
