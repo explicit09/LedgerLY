@@ -1,6 +1,6 @@
 # Task ID: 7
 # Title: Transaction Management API
-# Status: pending
+# Status: done
 # Dependencies: 1, 2, 3, 4, 5, 16, 17, 18, 19
 # Priority: medium
 # Description: Create APIs for users to view, edit, categorize, and manage their transactions.

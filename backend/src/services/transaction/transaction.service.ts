@@ -452,6 +452,88 @@ class TransactionService {
       },
     };
   }
+
+  /**
+   * Helper method to fetch transactions without pagination metadata
+   */
+  async findTransactions({
+    userId,
+    page = 1,
+    limit = 50,
+    startDate,
+    endDate,
+    category,
+    search,
+  }: {
+    userId: string;
+    page?: number;
+    limit?: number;
+    startDate?: Date;
+    endDate?: Date;
+    category?: string;
+    search?: string;
+  }) {
+    const { transactions } = await this.getTransactions({
+      userId,
+      page,
+      limit,
+      startDate,
+      endDate,
+      category,
+      search,
+    });
+
+    return transactions;
+  }
+
+  /**
+   * Count transactions matching the given filters
+   */
+  async countTransactions({
+    userId,
+    startDate,
+    endDate,
+    category,
+    search,
+  }: {
+    userId: string;
+    startDate?: Date;
+    endDate?: Date;
+    category?: string;
+    search?: string;
+  }): Promise<number> {
+    const { pagination } = await this.getTransactions({
+      userId,
+      page: 1,
+      limit: 1,
+      startDate,
+      endDate,
+      category,
+      search,
+    });
+
+    return pagination.total;
+  }
+
+  /**
+   * Find a transaction by ID
+   */
+  async findById(id: string) {
+    return prisma.transaction.findUnique({ where: { id } });
+  }
+
+  /**
+   * Update an existing transaction
+   */
+  async updateTransaction(
+    id: string,
+    data: { category?: string | null; description?: string | null; isRecurring?: boolean | null }
+  ) {
+    return prisma.transaction.update({
+      where: { id },
+      data,
+    });
+  }
 }
 
 // Export a singleton instance
