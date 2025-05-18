@@ -50,8 +50,9 @@ LedgerLY is a private, user-centric finance dashboard designed to connect to ban
     ```bash
     cd backend
     npm install
-    cp .env.example .env 
+    cp .env.example .env
     # Fill in your .env with database credentials, Plaid keys, JWT secret, etc.
+    # Ensure PLAID_CLIENT_ID, PLAID_SECRET, and PLAID_ENV are configured
     # npm run db:migrate (once migrations are set up)
     npm run dev:https 
     ```
@@ -63,6 +64,7 @@ LedgerLY is a private, user-centric finance dashboard designed to connect to ban
     npm install
     cp .env.example .env
     # Fill in your .env with the backend API URL (e.g., REACT_APP_API_URL=https://localhost:3443/api)
+    # Also copy PLAID_* variables from the backend .env if needed
     npm start
     ```
     The frontend will typically run on `https://localhost:5173`.

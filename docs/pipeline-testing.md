@@ -72,6 +72,13 @@ Execute the script with the target environment as an argument:
 - Rollback procedure testing
 - Environment variable handling
 
+### Plaid Integration Tests
+- Uses Plaid sandbox credentials to validate the bank connection flow
+- Generates and exchanges Link tokens during the pipeline run
+- Verifies logs for success and failure cases in the monitoring service
+- Requires `PLAID_CLIENT_ID`, `PLAID_SECRET`, and `PLAID_ENV` to be set
+- Logs are written to `logs/plaid-*.log` for debugging
+
 ### 7. Cleanup Procedures
 - Removes test artifacts
 - Cleans up test containers

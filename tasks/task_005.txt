@@ -1,6 +1,6 @@
 # Task ID: 5
 # Title: Transaction Data Processing and Storage
-# Status: pending
+# Status: done
 # Dependencies: 1, 2, 3, 4, 16, 17, 18, 19
 # Priority: medium
 # Description: Process and store transaction data from Plaid, including categorization and recurring transaction detection.
@@ -87,27 +87,32 @@ function determineFrequency(avgDays) {
    - Environment-specific configuration tests (staging vs production)
 
 # Subtasks:
-## 5.1. Integrate transaction processing with CI/CD pipeline [pending]
+## 5.1. Integrate transaction processing with CI/CD pipeline [done]
 ### Dependencies: None
 ### Description: Update transaction processing service to work with the newly created CI/CD pipeline
 ### Details:
-
-
-## 5.2. Create database migration scripts for transaction tables [pending]
+The GitHub Actions backend workflow now installs dependencies, runs database
+migrations, and executes transaction service tests on every push and pull
+request. The workflow ensures the transaction processing code is built and
+deployed alongside other backend services.
+## 5.2. Create database migration scripts for transaction tables [done]
 ### Dependencies: None
 ### Description: Develop migration scripts for transaction tables that can be run automatically in the CI/CD pipeline
 ### Details:
-
-
-## 5.3. Configure environment-specific settings for transaction processing [pending]
+Prisma migration files define the `Transaction` table with indexes for
+`plaidTransactionId` and `userId`. The CI pipeline automatically runs these
+migrations using `npm run migrate` before tests and deployment steps.
+## 5.3. Configure environment-specific settings for transaction processing [done]
 ### Dependencies: None
 ### Description: Set up configuration for transaction processing service across dev, staging, and production environments
 ### Details:
-
-
-## 5.4. Add transaction service tests to GitHub Actions workflow [pending]
+Environment variables in `scripts/env.template` include values for development,
+staging, and production databases. The configuration service reads these values
+to connect to the correct database and Plaid environment for each stage.
+## 5.4. Add transaction service tests to GitHub Actions workflow [done]
 ### Dependencies: None
 ### Description: Ensure transaction processing tests are included in the backend testing workflow
 ### Details:
-
-
+Unit and integration tests for the transaction service run as part of the
+backend GitHub Actions workflow. Test results are uploaded as artifacts and
+failures block merges into the main branch.

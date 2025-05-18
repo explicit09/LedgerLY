@@ -40,10 +40,10 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
@@ -77,10 +77,10 @@ jobs:
     environment: staging
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Use Node.js 18.x
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18.x
 
@@ -99,7 +99,7 @@ jobs:
       run: npm run build
 
     - name: Deploy to Staging
-      uses: akhileshns/heroku-deploy@v3.12.14
+      uses: akhileshns/heroku-deploy@v3.14.15
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_STAGING_APP_NAME }}
@@ -114,10 +114,10 @@ jobs:
     environment: production
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Use Node.js 18.x
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18.x
 
@@ -136,7 +136,7 @@ jobs:
       run: npm run build
 
     - name: Deploy to Production
-      uses: akhileshns/heroku-deploy@v3.12.14
+      uses: akhileshns/heroku-deploy@v3.14.15
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_PRODUCTION_APP_NAME }}
