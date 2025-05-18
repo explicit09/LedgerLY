@@ -99,7 +99,7 @@ jobs:
       run: npm run build
 
     - name: Deploy to Staging
-      uses: akhileshns/heroku-deploy@v3.12.14
+      uses: akhileshns/heroku-deploy@v3.14.15
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_STAGING_APP_NAME }}
@@ -136,7 +136,7 @@ jobs:
       run: npm run build
 
     - name: Deploy to Production
-      uses: akhileshns/heroku-deploy@v3.12.14
+      uses: akhileshns/heroku-deploy@v3.14.15
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ secrets.HEROKU_PRODUCTION_APP_NAME }}
