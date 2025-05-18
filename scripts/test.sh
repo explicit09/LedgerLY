@@ -1,16 +1,7 @@
 #!/bin/bash
-# Forward test commands to backend test runner and run root tests first
-set -e
-DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT="$DIR/.."
+# Wrapper script to run backend tests from the repository root
 
-# Run root unit tests
-npx jest --config "$ROOT/jest.config.js" --runInBand
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Run backend tests
-if [ -f "$ROOT/backend/scripts/test.sh" ]; then
-  (cd "$ROOT/backend" && ./scripts/test.sh "$@")
-else
-  echo "Backend test script not found" >&2
-  exit 1
-fi
+"$PROJECT_ROOT/backend/scripts/test.sh" "$@"

@@ -1,32 +1,58 @@
 import { Request, Response, NextFunction } from 'express';
-import { transactionService } from '../services';
-import { sendSuccessResponse } from '../utils/apiResponse';
+
+import { transactionService } from '../services/transaction';
 import { UnauthorizedError } from '../errors/AppError';
 
+function toCsv(records: any[]): string {
+  if (records.length === 0) {
+    return '';
+  }
+  const header = [
+    'date',
+    'description',
+    'amount',
+    'category'
+  ];
+  const lines = records.map(tx => {
+    const vals = [
+      tx.date ? new Date(tx.date).toISOString().split('T')[0] : '',
+      tx.description || '',
+      tx.amount != null ? tx.amount : '',
+      tx.category || ''
+    ];
+    return vals.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+  });
+  return header.join(',') + '\n' + lines.join('\n');
+}
+
 export class TransactionController {
-  static async listTransactions(req: Request, res: Response, next: NextFunction) {
+  static async exportCsv(req: Request, res: Response, next: NextFunction) {
+
     try {
       const userId = req.user?.id;
       if (!userId) {
         throw new UnauthorizedError('User not authenticated');
       }
 
-      const { page, limit, startDate, endDate, category, search } = req.query;
+      const { startDate, endDate } = req.query;
+      const start = startDate ? new Date(startDate as string) : undefined;
+      const end = endDate ? new Date(endDate as string) : undefined;
 
-      const result = await transactionService.getTransactions({
+      const { transactions } = await transactionService.getTransactions({
         userId,
-        page: page ? parseInt(page as string, 10) : 1,
-        limit: limit ? parseInt(limit as string, 10) : 50,
-        startDate: startDate ? new Date(startDate as string) : undefined,
-        endDate: endDate ? new Date(endDate as string) : undefined,
-        category: category as string | undefined,
-        search: search as string | undefined,
+        page: 1,
+        limit: 10000,
+        startDate: start,
+        endDate: end
       });
 
-      sendSuccessResponse(res, result);
-      return;
-    } catch (error) {
-      next(error);
+      const csv = toCsv(transactions);
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename=transactions.csv');
+      res.send(csv);
+    } catch (err) {
+      next(err);
+
     }
   }
 }
