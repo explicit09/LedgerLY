@@ -98,22 +98,35 @@ async function getExpensesByCategory(userId, startDate, endDate) {
 ### Description: Implement secure access to database credentials, API keys, and JWT signing keys using AWS Secrets Manager
 ### Details:
 
+Use the AWS SDK's Secrets Manager client to fetch database credentials, API keys,
+and JWT signing keys at runtime. Store secret ARNs in environment variables and
+cache retrieved secrets to minimise API calls. Document the retrieval logic and
+provide examples for local development.
 
 ## 6.2. Configure IAM policies for analytics service [done]
 ### Dependencies: None
 ### Description: Set up appropriate IAM policies for the analytics service to access required secrets
 ### Details:
 
+Create a least-privilege IAM policy that grants `secretsmanager:GetSecretValue`
+for required secrets and write access to CloudWatch logs. Attach this policy to
+the analytics service role and verify via IAM policy simulator.
 
 ## 6.3. Implement environment-specific secret handling [done]
 ### Dependencies: None
 ### Description: Configure the analytics service to use different secrets based on the deployment environment (dev, staging, prod)
 ### Details:
 
+Define separate secret names for development, staging, and production. Select
+the appropriate secret based on an `NODE_ENV` environment variable and allow a
+fallback to local `.env` values for offline development.
 
 ## 6.4. Add CloudWatch audit logging [done]
 ### Dependencies: None
 ### Description: Implement CloudWatch logging for tracking secrets access and analytics API usage
 ### Details:
 
+Enable CloudWatch Logs for analytics endpoints and record each Secrets Manager
+access with timestamp and caller identity. Configure log retention policies and
+alarms for unusual access patterns.
 

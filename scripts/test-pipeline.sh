@@ -225,6 +225,16 @@ test_github_workflow() {
     fi
 }
 
+# Function to test Plaid integration in sandbox
+test_plaid_integration() {
+    echo -e "\n${YELLOW}Testing Plaid Integration...${NC}"
+    local api_base="${REACT_APP_API_URL:-http://localhost:3001/api}"
+    local response=$(curl -s -X POST "$api_base/plaid/link-token" -H "Authorization: Bearer test")
+    echo "$response" > logs/plaid-test.log
+    echo "$response" | grep -q "linkToken"
+    print_status $? "Plaid link token generated"
+}
+
 # Function to test rollback procedure
 test_rollback() {
     echo -e "\n${YELLOW}Testing Rollback Procedure...${NC}"
@@ -329,6 +339,7 @@ test_secrets_manager
 test_sns_topics
 test_cloudwatch_alarms
 test_github_workflow
+test_plaid_integration
 
 # Ask for deployment test
 read -p "Do you want to simulate a test deployment? (y/N) " -n 1 -r

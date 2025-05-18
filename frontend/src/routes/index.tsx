@@ -17,6 +17,8 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import SettingsPage from '../pages/account/SettingsPage';
 import TransactionsPage from '../pages/transactions/TransactionsPage';
+import BankConnectionsPage from '../pages/account/BankConnectionsPage';
+
 
 // Error page
 const ErrorPage: React.FC = () => (
@@ -77,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: 'settings',
         element: <ProtectedRoute element={<SettingsPage />} />,
+      },
+      {
+        path: 'bank-connections',
+        element: <ProtectedRoute element={<BankConnectionsPage />} />,
       },
     ],
   },
