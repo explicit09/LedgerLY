@@ -305,6 +305,25 @@ export class PlaidService {
   }
 
   /**
+   * Removes a Plaid item and revokes its access token
+   */
+  async removeItem(accessToken: string): Promise<void> {
+    if (!accessToken) {
+      throw new BadRequestError('Access token is required');
+    }
+
+    try {
+      await this.withRetry(
+        () => this.client.itemRemove({ access_token: accessToken }),
+        'removeItem'
+      );
+    } catch (error: unknown) {
+      const appError = this.handlePlaidError(error, 'Failed to remove item');
+      throw appError;
+    }
+  }
+
+  /**
    * Handles Plaid API errors consistently
    * @param error The error that occurred
    * @param defaultMessage The default error message to use if none is provided

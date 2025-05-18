@@ -1,6 +1,6 @@
 # Task ID: 13
 # Title: Account Deletion and Data Removal
-# Status: pending
+# Status: done
 # Dependencies: 1, 2, 3, 4, 5, 16, 17, 18, 19
 # Priority: medium
 # Description: Implement functionality for users to delete their accounts and all associated data, including revoking Plaid access.

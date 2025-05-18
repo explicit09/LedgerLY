@@ -656,7 +656,7 @@
       "id": 13,
       "title": "Account Deletion and Data Removal",
       "description": "Implement functionality for users to delete their accounts and all associated data, including revoking Plaid access.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
