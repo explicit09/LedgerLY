@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 import { transactionService } from '../services/transaction';
 import { UnauthorizedError } from '../errors/AppError';
 
@@ -26,11 +27,13 @@ function toCsv(records: any[]): string {
 
 export class TransactionController {
   static async exportCsv(req: Request, res: Response, next: NextFunction) {
+
     try {
       const userId = req.user?.id;
       if (!userId) {
         throw new UnauthorizedError('User not authenticated');
       }
+
       const { startDate, endDate } = req.query;
       const start = startDate ? new Date(startDate as string) : undefined;
       const end = endDate ? new Date(endDate as string) : undefined;
@@ -49,6 +52,7 @@ export class TransactionController {
       res.send(csv);
     } catch (err) {
       next(err);
+
     }
   }
 }

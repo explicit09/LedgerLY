@@ -344,7 +344,7 @@
       "id": 5,
       "title": "Transaction Data Processing and Storage",
       "description": "Process and store transaction data from Plaid, including categorization and recurring transaction detection.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -363,25 +363,25 @@
           "id": 5.1,
           "title": "Integrate transaction processing with CI/CD pipeline",
           "description": "Update transaction processing service to work with the newly created CI/CD pipeline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5.2,
           "title": "Create database migration scripts for transaction tables",
           "description": "Develop migration scripts for transaction tables that can be run automatically in the CI/CD pipeline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5.3,
           "title": "Configure environment-specific settings for transaction processing",
           "description": "Set up configuration for transaction processing service across dev, staging, and production environments",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 5.4,
           "title": "Add transaction service tests to GitHub Actions workflow",
           "description": "Ensure transaction processing tests are included in the backend testing workflow",
-          "status": "pending"
+          "status": "done"
         }
       ]
     },
@@ -409,24 +409,32 @@
           "id": "6.1",
           "title": "Integrate AWS Secrets Manager for sensitive data",
           "description": "Implement secure access to database credentials, API keys, and JWT signing keys using AWS Secrets Manager",
+          "details": "Retrieve secrets via AWS SDK at runtime, store secret ARNs in environment variables, cache values locally and document the process.",
+          "dependencies": [],
           "status": "done"
         },
         {
           "id": "6.2",
           "title": "Configure IAM policies for analytics service",
           "description": "Set up appropriate IAM policies for the analytics service to access required secrets",
+          "details": "Create least-privilege policy granting Secrets Manager read access and CloudWatch log permissions; attach to the analytics role and verify with the IAM simulator.",
+          "dependencies": [],
           "status": "done"
         },
         {
           "id": "6.3",
           "title": "Implement environment-specific secret handling",
           "description": "Configure the analytics service to use different secrets based on the deployment environment (dev, staging, prod)",
+          "details": "Use environment variables to select secret names for dev, staging and production; allow local .env fallbacks during development.",
+          "dependencies": [],
           "status": "done"
         },
         {
           "id": "6.4",
           "title": "Add CloudWatch audit logging",
           "description": "Implement CloudWatch logging for tracking secrets access and analytics API usage",
+          "details": "Log each secret retrieval with timestamp and caller identity, configure log retention and alarms for unusual access patterns.",
+          "dependencies": [],
           "status": "done"
         }
       ]
@@ -568,24 +576,28 @@
           "id": 9.1,
           "title": "Configure environment variables for Plaid integration",
           "description": "Set up the necessary environment variables for Plaid integration using the template in scripts/env.template",
+          "details": "Add PLAID_CLIENT_ID, PLAID_SECRET, PLAID_ENV, and optional PLAID_WEBHOOK_URL to .env.staging and .env.production. Document the setup in the README and verify the variables load correctly during builds.",
           "status": "done"
         },
         {
           "id": 9.2,
           "title": "Implement logging for Plaid connection events",
           "description": "Add timestamped logging for Plaid connection attempts, successes, and failures to align with the CI/CD pipeline testing requirements",
+          "details": "Record Link open, success, exit, and error events using the logging utility. Include timestamps and user IDs, and forward logs to the monitoring service.",
           "status": "done"
         },
         {
           "id": 9.3,
           "title": "Add CI/CD pipeline test cases",
           "description": "Create specific test cases for the Plaid integration to be included in the test-pipeline.sh script",
+          "details": "Use Plaid sandbox credentials to simulate connection, token exchange, and failure scenarios. Extend test-pipeline.sh so these checks run in CI.",
           "status": "done"
         },
         {
           "id": 9.4,
           "title": "Document Plaid integration in pipeline documentation",
           "description": "Update docs/pipeline-testing.md with specific information about testing the Plaid integration",
+          "details": "Add a section to the pipeline testing guide describing Plaid integration tests, required environment variables, and log locations.",
           "status": "done"
         }
       ]
@@ -594,7 +606,7 @@
       "id": 10,
       "title": "Dashboard Analytics Visualization",
       "description": "Implement frontend visualizations for financial analytics using charts and graphs.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -615,7 +627,7 @@
       "id": 11,
       "title": "Transaction Management UI",
       "description": "Build the frontend interface for viewing, searching, and editing transactions.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
@@ -677,7 +689,7 @@
       "id": 14,
       "title": "Security Enhancements and Data Encryption",
       "description": "Implement additional security measures including data encryption, HTTPS enforcement, and security headers.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,

@@ -246,6 +246,21 @@ describe('TransactionService', () => {
         expect(gymTx.transactionIds).toHaveLength(3);
       }
     });
+
+    it('detects patterns using merchant and amount variance', () => {
+      const transactions = [
+        { id: 'a1', name: 'Netflix', amount: 15.99, date: new Date('2024-01-01') },
+        { id: 'a2', name: 'Netflix', amount: 16.1, date: new Date('2024-02-01') },
+        { id: 'a3', name: 'Netflix', amount: 15.5, date: new Date('2024-03-01') },
+        { id: 'b1', name: 'One Off', amount: 50, date: new Date('2024-01-15') },
+      ];
+
+      const result = transactionService.detectRecurringTransactions(transactions as any, userId);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].frequency).toBe('monthly');
+      expect(result[0].transactionIds).toEqual(['a1', 'a2', 'a3']);
+    });
   });
 
   describe('getTransactions', () => {
