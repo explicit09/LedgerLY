@@ -568,24 +568,28 @@
           "id": 9.1,
           "title": "Configure environment variables for Plaid integration",
           "description": "Set up the necessary environment variables for Plaid integration using the template in scripts/env.template",
+          "details": "Add PLAID_CLIENT_ID, PLAID_SECRET, PLAID_ENV, and optional PLAID_WEBHOOK_URL to .env.staging and .env.production. Document the setup in the README and verify the variables load correctly during builds.",
           "status": "done"
         },
         {
           "id": 9.2,
           "title": "Implement logging for Plaid connection events",
           "description": "Add timestamped logging for Plaid connection attempts, successes, and failures to align with the CI/CD pipeline testing requirements",
+          "details": "Record Link open, success, exit, and error events using the logging utility. Include timestamps and user IDs, and forward logs to the monitoring service.",
           "status": "done"
         },
         {
           "id": 9.3,
           "title": "Add CI/CD pipeline test cases",
           "description": "Create specific test cases for the Plaid integration to be included in the test-pipeline.sh script",
+          "details": "Use Plaid sandbox credentials to simulate connection, token exchange, and failure scenarios. Extend test-pipeline.sh so these checks run in CI.",
           "status": "done"
         },
         {
           "id": 9.4,
           "title": "Document Plaid integration in pipeline documentation",
           "description": "Update docs/pipeline-testing.md with specific information about testing the Plaid integration",
+          "details": "Add a section to the pipeline testing guide describing Plaid integration tests, required environment variables, and log locations.",
           "status": "done"
         }
       ]
