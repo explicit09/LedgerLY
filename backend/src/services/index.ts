@@ -1,4 +1,4 @@
 // Export all services
 export * from './plaid';
 export * from './transaction';
-export * from './analytics';
+export * from './user/user.service';
