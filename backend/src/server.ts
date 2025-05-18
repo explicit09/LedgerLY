@@ -6,8 +6,11 @@ import dotenv from 'dotenv';
 import https from 'https';
 import http from 'http';
 import path from 'path';
+import session from 'express-session';
+import csurf from 'csurf';
 import { transactionSyncScheduler } from './services/scheduler';
 import { plaidWebhookRouter } from './routes/plaid-webhook.routes';
+import { requireHttps, securityHeaders, authLimiter } from './middleware/security.middleware';
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -37,6 +40,30 @@ app.use(cors({
   credentials: true,
 }));
 
+// Additional security headers
+app.use(securityHeaders);
+
+// HTTPS enforcement outside development
+app.use(requireHttps);
+
+// Secure cookie-based session configuration
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'change_this_secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    },
+  })
+);
+
+// CSRF protection
+app.use(csurf());
+
 // Request logging
 app.use(morgan(isProduction ? 'combined' : 'dev', {
   stream: {
@@ -47,6 +74,10 @@ app.use(morgan(isProduction ? 'combined' : 'dev', {
 // Parse JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limiting for authentication routes
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', authLimiter);
 
 // API Routes
 app.use('/api/plaid', plaidRoutes);
@@ -80,16 +111,6 @@ app.get('/health', async (req: Request, res: Response) => {
   }
 });
 
-// Redirect HTTP to HTTPS in production (handled by reverse proxy in production)
-if (isProduction) {
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    const xForwardedProto = req.headers['x-forwarded-proto'];
-    if (xForwardedProto && xForwardedProto !== 'https') {
-      return res.redirect(`https://${req.headers.host}${req.url}`);
-    }
-    next();
-  });
-}
 
 // 404 handler
 app.use((req: Request, res: Response) => {
