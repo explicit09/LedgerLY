@@ -636,7 +636,7 @@
       "id": 12,
       "title": "Data Export Functionality",
       "description": "Implement functionality for users to export their transaction data in CSV format.",
-      "status": "pending",
+      "status": "done",
       "dependencies": [
         1,
         2,
