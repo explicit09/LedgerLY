@@ -19,6 +19,7 @@ import { logger } from './utils/logger';
 
 // Import routes
 import plaidRoutes from './routes/plaid.routes';
+import analyticsRoutes from './routes/analytics.routes';
 // Import auth middleware if needed
 // import { authMiddleware } from './middleware/auth.middleware';
 
@@ -49,6 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use('/api/plaid', plaidRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Webhook Routes (no JSON body parsing for webhooks)
 const webhookRouter = Router();
