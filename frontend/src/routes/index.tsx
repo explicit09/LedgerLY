@@ -16,6 +16,7 @@ import RegisterPage from '../pages/auth/RegisterPage';
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 import SettingsPage from '../pages/account/SettingsPage';
+import TransactionsPage from '../pages/transactions/TransactionsPage';
 
 // Error page
 const ErrorPage: React.FC = () => (
@@ -68,6 +69,10 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <ProtectedRoute element={<Dashboard />} />,
+      },
+      {
+        path: 'transactions',
+        element: <ProtectedRoute element={<TransactionsPage />} />,
       },
       {
         path: 'settings',
