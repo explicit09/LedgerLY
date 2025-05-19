@@ -48,7 +48,7 @@
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.17.3",
     "csurf": "^1.11.0",
-    "express-validator": "^6.15.0"
+    "express-validator": "^7.2.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
